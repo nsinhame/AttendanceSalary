@@ -17,7 +17,7 @@ class WorkerDetail(db.Model):
     worker_bank_name = db.Column(db.String(35), nullable = False, unique = True)
     worker_bank_branch_name = db.Column(db.String(40), nullable = False, unique = True)
     woker_join_date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow, unique = False)
-    worker_salary = db.Column(db.Integer, nullable = False, unique = False)
+    worker_salary = db.Column(db.Integer, nullable = False, unique = False) #per day
     supervisor_id = db.Column(db.String(35), db.ForeignKey("SupervisorDetail.supervisor_id"), nullable = False, unique = False)
     site_id = db.Column(db.String(6), db.ForeignKey("SiteData.site_id"), nullable = False, unique = False)
     # Still working can be Y (yes), N (no), L (on leave)
@@ -39,12 +39,14 @@ class WorkerAttendance(db.Model):
     attendance_month = db.Column(db.Integer, nullable = False, unique = False)
     attendance_year = db.Column(db.Integer, nullable = False, unique = False)
     overtime_hours = db.Column(db.Integer, nullable = False, unique = False)
+    attendance_status = db.Column(db.String(1), db.ForeignKey("WorkerTodayAttendance.attendance_status"), nullable = False, unique = False)
 
 class WorkerSalary(db.Model):
     worker_id = db.Column(db.String(6), db.ForeignKey("WorkerPrimary.worker_id"), primary_key = True, nullable = False)
     monthly_salary = db.Column(db.Integer, nullable = False, unique = False)
     overtime_salary = db.Column(db.Integer, nullable = False, unique = False)
     total_salary = db.Column(db.Integer, nullable = False, unique = False)
+    advance_salary = db.Column(db.Integer, nullable = True, unique = False)
     
 
 class LocationData(db.Models):
