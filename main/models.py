@@ -1,9 +1,13 @@
+from datetime import datetime
+from main import db, app
+from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
+
 class WorkerPrimary(db.Model):
     worker_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False)
     worker_name = db.Column(db.String(35), unique = False, primary_key = False, nullable = False)
 
 class WorkerDetail(db.Model):
-    worker_id = db.Column(db.String(6), primary_key = True, db.ForeignKey("WorkerPrimary.worker_id"), nullable = False)
+    worker_id = db.Column(db.String(6), db.ForeignKey("WorkerPrimary.worker_id"), primary_key = True, nullable = False)
     worker_name = db.Column(db.String(35), db.ForeignKey("WorkerPrimary.worker_name"), nullable = False)
     worker_phone_number = db.Column(db.Integer, nullable = False, unique = True)
     worker_address = db.Column(db.String(50), nullable = False, unique = False)
@@ -12,28 +16,36 @@ class WorkerDetail(db.Model):
     worker_ifsc_code = db.Column(db.String(12), nullable = False, unique = False)
     worker_bank_name = db.Column(db.String(35), nullable = False, unique = True)
     worker_bank_branch_name = db.Column(db.String(40), nullable = False, unique = True)
-    woker_join_date = db.Column(db.DateTime, nullable = False, default = datetme.utcnow, unique = False)
+    woker_join_date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow, unique = False)
     worker_salary = db.Column(db.Integer, nullable = False, unique = False)
-    supervisor_id = db.Column(db.String(35), db.ForeignKey("SupervisorDetail.supervisor_id")nullable = False, unique = False)
-    site_id = db.Column(db.String(6), db.ForeignKey("SiteData.site_id"), nullable = False, unique = True)
+    supervisor_id = db.Column(db.String(35), db.ForeignKey("SupervisorDetail.supervisor_id"), nullable = False, unique = False)
+    site_id = db.Column(db.String(6), db.ForeignKey("SiteData.site_id"), nullable = False, unique = False)
+    # Still working can be Y (yes), N (no), L (on leave)
+    still_working = db.Column(db.String(1), nullable = False, unique = False)
 
 class WorkerTodayAttendance(db.Model):
-    worker_id = db.Column(db.String(6), primary_key = True, db.ForeignKey("WorkerPrimary.worker_id"), nullable = False)
+    worker_id = db.Column(db.String(6), db.ForeignKey("WorkerPrimary.worker_id"), primary_key = True, nullable = False)
     ## Attendance status can be Present, Absent, HalfTime
     attendance_status = db.Column(db.String(1), nullable = False, unique = False)
-    attendance_date = db.Column(db.DateTime, nullable = False, default = datetme.utcnow, unique = False)
-    did_overtime = db.Column(db.String(1), nullabe = False, unique = False)
+    attendance_date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow, unique = False)
+    did_overtime = db.Column(db.String(1), nullable = False, unique = False)
     overtime_today = db.Column(db.Integer, nullable = True, unique = False)
-    
+
+
 class WorkerAttendance(db.Model):
-    worker_id = db.Column(db.String(6), primary_key = True, db.ForeignKey("WorkerPrimary.worker_id"), nullable = False)
-    worker_name = db.Column(db.String(35), db.ForeignKey("WorkerPrimary.worker_name"), nullable = False)
-    site_id = db.Column(db.String(6), db.ForeignKey("SiteData.site_id"), nullable = False, unique = True)
-    ## Have to add day logic
-    overtime_salary = db.Column(db.Integer, nullabe = False, unique = False)
+    row_id = db.Column(db.String(6), primary_key = True, nullable = False)
+    worker_id = db.Column(db.String(6), db.ForeignKey("WorkerPrimary.worker_id"), nullable = False)
+    attendance_date = db.Column(db.Integer, nullable = False, unique = False)
+    attendance_month = db.Column(db.Integer, nullable = False, unique = False)
+    attendance_year = db.Column(db.Integer, nullable = False, unique = False)
     overtime_hours = db.Column(db.Integer, nullable = False, unique = False)
+
+class WorkerSalary(db.Model):
+    worker_id = db.Column(db.String(6), db.ForeignKey("WorkerPrimary.worker_id"), primary_key = True, nullable = False)
+    monthly_salary = db.Column(db.Integer, nullable = False, unique = False)
+    overtime_salary = db.Column(db.Integer, nullable = False, unique = False)
     total_salary = db.Column(db.Integer, nullable = False, unique = False)
-    total_present = db.Column(db.Integer, nullable = False, unique = False)
+    
 
 class LocationData(db.Models):
     location_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False)
@@ -55,7 +67,7 @@ class ProjectData(db.Model):
     location_id = db.Column(db.String(6), db.ForeignKey("LocationData.location_id"), nullable = False, unique = True)
     site_eng_id = db.Column(db.String(6), db.ForeignKey("SiteEngineerDetail.site_eng_id"), nullable = False, unique = True)
     supervisor_id = db.Column(db.String(6), db.ForeignKey("SupervisorDetail.supervisor_id"), nullable = False, unique = True)
-    total_workers = db.Column(db.Integer, db. nullable = False, unique = False)
+    total_workers = db.Column(db.Integer, nullable = False, unique = False)
 
 class SiteEngineerDetails(db.Model):
     site_eng_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False)
