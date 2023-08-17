@@ -1,0 +1,15 @@
+{% block content %}
+
+<form method="POST" action="{{ url_for('LoginForm') }}" id="login">
+    <div class="form-group">
+        <label for="inputEmail">Email</label>
+        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+    </div>
+    <div class="form-group">
+        <label for="inputPassword">Password</label>
+        <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+    </div>
+    <button type="submit" class="btn btn-primary">Sign in</button>
+</form>
+
+{% endblock content %}
