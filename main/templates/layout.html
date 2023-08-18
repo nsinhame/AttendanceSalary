@@ -2,15 +2,27 @@
 <html>
 
 <head>
+    {% block head %}{% endblock head %}
+
     {% if title %}
-    <title>{{ title }}</title>
+    <title>{% block title %} {{ title }} {% endblock %}</title>
     {% else %}
-    <title>Flask Blog</title>
+    <title> Flask Blog </title>
     {% endif %}
+
+    <style>
+        body {
+            background-color: tan;
+        }
+    </style>
+    
+    
 </head>
 
 
 <body>
+    {% block content %}
+    {% endblock content%}
     
 </body>
 

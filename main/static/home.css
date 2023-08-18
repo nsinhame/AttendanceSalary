@@ -1,0 +1,13 @@
+.center {
+  margin: auto;
+  width: 60%;
+  padding: 10px;
+  text-align: center;
+  
+}
+
+  .bg-color {
+    background-color: tan;
+    height: 100%;
+    width: 100%;
+}

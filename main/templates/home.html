@@ -1,0 +1,42 @@
+<!-- HTML for Home page or front page -->
+
+{% extends "layout.html" %}            <!-- Extend the layout.html so that its property can be used here -->
+
+{% block head %}                       <!-- Use block head as head tag. By default it will use properties defined in layout's head tag -->
+
+<link rel="stylesheet" href={{ url_for('static', filename='home.css') }}>  <!-- Using CSS file stored in static folder -->
+
+{% endblock head %}                    <!-- End of head block which means end of head tag -->
+
+
+{% block content %}                    <!-- Start of block content which also means start of body tag -->
+
+<div class = "bg-color">               <!-- Using bg-color class which is defined in home.css -->
+<div class= "center">                  <!-- Using center class which is defined in home.css-->
+<h1 size="50px">Swastik Associates</h1> <!-- Main heading of the home page --> 
+<br><br><br><br><br><br><br><br><br><br><br>
+
+<!-- Starting of the main form, using method as POST because we don't want to send stored data through link. /submit_credit is a function
+     in routes.py that deals with the data transfered from here -->
+    <form method="POST" action ="/submit_login_credit">
+        <div class = "form-group">                     <!-- form-group is a class provided by bootstrap -->
+
+            <label for="input_id">User ID:  </label>   <!-- for means ID of what you are labeling. Simply to connect label tag and from input tag -->
+            <!-- id is used for the backend purpose while name is used for http request made by browser to server -->
+            <input type="text" class="form-control" name = "input_id" id="input_id" placeholder="User ID"> 
+        </div><br><br>
+
+        <div class="form-group">                       <!-- form-group is a class provided by bootstrap -->
+            <label for="input_password">Password:  </label>
+            <input type="password" class="form-control" name= "input_password" id="input_password" placeholder="Password">
+        </div><br><br>
+        <button type="submit" class="btn btn-primary">Sign in</button>  <!-- Submit button triggers the /submit_login_credit funtion and the data 
+                                                                              stored in the form is sent there -->
+    </form>
+    
+
+</div>
+
+</div>
+
+{% endblock content %}
