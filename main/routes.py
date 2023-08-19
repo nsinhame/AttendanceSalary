@@ -1,3 +1,5 @@
+# Routes to do backend work and connect webpages and data from each other
+
 from main import app, db, bcrypt
 from flask import render_template, redirect, url_for, flash, request
 from main.models import WorkerPrimary, WorkerTodayAttendance, WorkerAttendance, WorkerSalary, LocationData, SiteData, ProjectData, SiteEngineerDetails, SupervisorDetails, Boss
@@ -6,18 +8,27 @@ import calendar
 from flask_login import login_user, current_user, logout_user, login_required
 
 
-@app.route("/", methods=["GET", "POST"])                             # Route for the opening page
-@app.route("/homepage", methods=["GET", "POST"])                   # Route when someone tries to navigate to first page
-def front_page():
-    return render_template("home.html", title="Home Page")
+@app.route("/", methods=["GET", "POST"])                           # Route for the opening page
+@app.route("/home", methods=["GET", "POST"])                       # Route when someone tries to navigate to first page
+def front_page():                                                  # This is the first page by default
+    return render_template("home.html", title="Home Page")         # Return home.html
 
+
+
+# Decorator when someone click on submit login credential button present at home.html
 @app.route("/submit_login_credit", methods=["GET", "POST"])
 def LoginForm():
-    if current_user.is_authenticated:
-        return redirect(url_for("bosslogin"))
-    if request.method == "POST":
-        input_id = request.form["input_id"]
-        input_password = request.form["input_password"]
+    ''' Have to think a logic so that authenticated 
+        users can go to their designated place '''
+    if current_user.is_authenticated:                             # If the current user is authenticated send him to boss login page
+        return render_template("bosslogin.html", title = "Boss Login")
+    
+    if request.method == "POST":                                  # If the request method is POST get the input credentials
+        input_id = request.form["input_id"]                       # Get input ID
+        input_password = request.form["input_password"]           # Get input password
+        
+        ''' Have to work on authenticating 
+            the user '''
         if input_id == "Boss01@1" and input_password == "123qwe":
             flash("Login Successful", "success")
             return render_template("bosslogin.html", title = "Boss Login")

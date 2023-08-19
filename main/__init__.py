@@ -9,12 +9,12 @@ from flask_login import LoginManager
 app = Flask(__name__)                                                            # Initialize the app
 app.config["SECRET_KEY"] = "5691628bb0b13ce0c6f6dfde280ba245"                    # Set the secret key
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///site.db"                      # Initialize the database
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True                            # Set it False for production environment
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True                              # Set it False for production environment
 db = SQLAlchemy(app)                                                             # Initialize database variable
-bcrypt = Bcrypt(app)                                                         # Initialize bycryption variable
-login_manager = LoginManager(app)
-login_manager.login_view = "home"
-login_manager.login_message_category = "info"
+bcrypt = Bcrypt(app)                                                             # Initialize bycryption variable
+login_manager = LoginManager(app)                                                # To manage the login activity
+login_manager.login_view = "home"                                                # Login view should be home 
+login_manager.login_message_category = "info"                                    # Login category should be info
 
 
 

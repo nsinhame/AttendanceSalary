@@ -1,15 +1,23 @@
+<!-- This is the basic layout. Every other webpage will extend it -->
+
+
 <!DOCTYPE html>
 <html>
 
 <head>
+    <!-- Create a head block that can work as a head tag in extended webpages -->
     {% block head %}{% endblock head %}
 
+    <!-- If title exist, show the title name -->
     {% if title %}
     <title>{% block title %} {{ title }} {% endblock %}</title>
+    
+    <!-- If title doen't exist show the default title -->
     {% else %}
-    <title> Flask Blog </title>
+    <title> Swastik Associates </title>
     {% endif %}
 
+    <!-- Colour of every webpage will be tan by defualt -->
     <style>
         body {
             background-color: tan;
@@ -21,6 +29,7 @@
 
 
 <body>
+    <!-- This is the block content, it will be used as the body tag in the extended webpages -->
     {% block content %}
     {% endblock content%}
     

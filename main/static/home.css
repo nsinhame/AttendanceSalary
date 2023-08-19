@@ -1,3 +1,7 @@
+/* CSS for the home webpage */
+
+
+/* To put the form in the center */
 .center {
   margin: auto;
   width: 60%;
@@ -6,6 +10,8 @@
   
 }
 
+
+/* To keep the background colour tan */
   .bg-color {
     background-color: tan;
     height: 100%;

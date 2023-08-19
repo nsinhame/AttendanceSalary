@@ -70,69 +70,86 @@ class WorkerAttendance(db.Model):
 
 
 
-#################################### Have to check
+''' Worker Salary contains the monthly calculated salary of the workers. '''
 class WorkerSalary(db.Model):
-    __tablename__ = "WorkerSalary"
-    row_id = db.Column(db.String(6), primary_key = True, nullable = True, unique = True)
-    worker_id = db.Column(db.String(6), db.ForeignKey("WorkerPrimary.worker_id"), nullable = False)
-    month_year = db.Column(db.String(7), nullable = False, unique = False)
-    monthly_salary = db.Column(db.Integer, nullable = False, unique = False)
-    overtime_salary = db.Column(db.Integer, nullable = False, unique = False)
-    total_salary = db.Column(db.Integer, nullable = False, unique = False)
-    advance_salary = db.Column(db.Integer, nullable = True, unique = False)
+    __tablename__ = "WorkerSalary"                                                            # Name of the table
+    row_id = db.Column(db.String(6), primary_key = True, nullable = True, unique = True)      # Row ID works as a primary key as Worker ID is repeated after every day and hence can be used as a primary key.
+    worker_id = db.Column(db.String(6), db.ForeignKey("WorkerPrimary.worker_id"), nullable = False) # Worker ID is a foreign key from Worker Primary table
+    month_year = db.Column(db.String(7), nullable = False, unique = False)                    # Month Year contains the combination of month and year so that we can see the month and year of each worker
+    monthly_salary = db.Column(db.Integer, nullable = False, unique = False)                  # Monthly salary of the worker
+    overtime_salary = db.Column(db.Integer, nullable = False, unique = False)                 # Overtime salary of the worker
+    total_salary = db.Column(db.Integer, nullable = False, unique = False)                    # Monthly salary + Overtime salary - Advance Salary
+    advance_salary = db.Column(db.Integer, nullable = True, unique = False)                   # Advance taken by the worker
     
 
+
+''' Location Data contains the data and information of each Location '''
 class LocationData(db.Model):
-    __tablename__ = "LocationData"
-    location_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False)
-    location_name = db.Column(db.String(30), nullable = False, unique = False)
-    location_state = db.Column(db.String(30), nullable = False, unique = False)
-    location_project_number = db.Column(db.Integer, nullable = False, unique = False)
+    __tablename__ = "LocationData"                                                            # Name of the table
+    location_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False) # ID of the location
+    location_name = db.Column(db.String(30), nullable = False, unique = False)                # Name of location
+    location_state = db.Column(db.String(30), nullable = False, unique = False)               # State of loction
+    location_project_number = db.Column(db.Integer, nullable = False, unique = False)         # Number of projects running on that location
 
+
+
+''' Site is like the name of the place where the projects are going on. Site data contains the data and the information of each site '''
 class SiteData(db.Model):
-    __tablename__ = "SiteData"
-    site_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False)
-    site_name = db.Column(db.String(30), nullable = False, unique = True)
-    location_id = db.Column(db.String(6), db.ForeignKey("LocationData.location_id"), nullable = False, unique = True)
-    site_pincode = db.Column(db.Integer, nullable = False, unique = False)
-    site_project_number = db.Column(db.Integer, nullable = False, unique = False)
+    __tablename__ = "SiteData"                                                                # Name of the table
+    site_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False)    # ID of the site
+    site_name = db.Column(db.String(30), nullable = False, unique = True)                     # Name of the site
+    location_id = db.Column(db.String(6), db.ForeignKey("LocationData.location_id"), nullable = False, unique = True) # Location ID being used as a foreign key
+    site_pincode = db.Column(db.Integer, nullable = False, unique = False)                    # Pincode of the site
+    site_project_number = db.Column(db.Integer, nullable = False, unique = False)             # Number of projects running on that site
 
+
+''' Project data contains the data and information about the projects '''
 class ProjectData(db.Model):
-    __tablename__ = "ProjectData"
-    project_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False)
-    project_name = db.Column(db.String(30), nullable = False, unique = False)
-    site_id = db.Column(db.String(6), db.ForeignKey("SiteData.site_id"), nullable = False, unique = True)
-    location_id = db.Column(db.String(6), db.ForeignKey("LocationData.location_id"), nullable = False, unique = True)
-    site_eng_id = db.Column(db.String(6), db.ForeignKey("SiteEngineerDetails.site_eng_id"), nullable = False, unique = True)
-    supervisor_id = db.Column(db.String(6), db.ForeignKey("SupervisorDetails.supervisor_id"), nullable = False, unique = True)
-    total_workers = db.Column(db.Integer, nullable = False, unique = False)
+    __tablename__ = "ProjectData"                                                            # Name of the table
+    project_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False) # ID of the project
+    project_name = db.Column(db.String(30), nullable = False, unique = False)                # Name ot the project
+    site_id = db.Column(db.String(6), db.ForeignKey("SiteData.site_id"), nullable = False, unique = True) # ID of the site is used as foreign key
+    location_id = db.Column(db.String(6), db.ForeignKey("LocationData.location_id"), nullable = False, unique = True) # ID of the location being used as foreign key
+    site_eng_id = db.Column(db.String(6), db.ForeignKey("SiteEngineerDetails.site_eng_id"), nullable = False, unique = True) # Site Engineer ID being used as a foreign key
+    supervisor_id = db.Column(db.String(6), db.ForeignKey("SupervisorDetails.supervisor_id"), nullable = False, unique = True) # Suprvisor ID being used as a foreign key
+    total_workers = db.Column(db.Integer, nullable = False, unique = False)                  # Total number of workers working on that project
 
+
+
+''' Site Engineer Details contain the data of the Site Engineer working at a particular site. Site Engineer is the head of the project. Site
+    Engineer have some rights like changing attendance status. Seeing previous attendance, etc. '''
 class SiteEngineerDetails(db.Model):
-    __tablename__ = "SiteEngineerDetails"
-    site_eng_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False)
-    site_eng_name = db.Column(db.String(30), nullable = False, unique = False)
-    site_eng_phone = db.Column(db.Integer, nullable = False, unique = True)
-    location_id = db.Column(db.String(6), db.ForeignKey("LocationData.location_id"), nullable = False, unique = True)
-    site_id = db.Column(db.String(6), db.ForeignKey("SiteData.site_id"), nullable = False, unique = True)
-    project_id = db.Column(db.String(6), db.ForeignKey("ProjectData.project_id"), nullable = False, unique = True)
-    site_eng_email = db.Column(db.String(40), nullable = False, unique = True)
-    site_eng_password = db.Column(db.String(20), nullable = False, unique = False)
+    __tablename__ = "SiteEngineerDetails"                                                   # Name of the table
+    site_eng_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False) # ID of the Site Engineer
+    site_eng_name = db.Column(db.String(30), nullable = False, unique = False)              # Site Engineer name
+    site_eng_phone = db.Column(db.Integer, nullable = False, unique = True)                 # Site Engineer phone number
+    location_id = db.Column(db.String(6), db.ForeignKey("LocationData.location_id"), nullable = False, unique = True) # ID of the location where the Site Engineer is working used as a foreign key
+    site_id = db.Column(db.String(6), db.ForeignKey("SiteData.site_id"), nullable = False, unique = True) # ID of the site being used as a foreign key
+    project_id = db.Column(db.String(6), db.ForeignKey("ProjectData.project_id"), nullable = False, unique = True) # ID of the Project being used as a foreign key
+    site_eng_email = db.Column(db.String(40), nullable = False, unique = True)              # Email of the site engineer
+    site_eng_password = db.Column(db.String(20), nullable = False, unique = False)          # Password of the site engineer
 
+
+
+''' Supervisor Details contain the data of the Supervisor. Supervisor comes under Site Engineer and can only take attendance. '''
 class SupervisorDetails(db.Model):
-    __tablename__ = "SupervisorDetails"
-    supervisor_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False)
-    supervisor_name = db.Column(db.String(30), nullable = False, unique = False)
-    supervisor_phone = db.Column(db.Integer, nullable = False, unique = True)
-    location_id = db.Column(db.String(6), db.ForeignKey("LocationData.location_id"), nullable = False, unique = True)
-    site_id = db.Column(db.String(6), db.ForeignKey("SiteData.site_id"), nullable = False, unique = True)
-    project_id = db.Column(db.String(6), db.ForeignKey("ProjectData.project_id"), nullable = False, unique = True)
-    supervisor_email = db.Column(db.String(40), nullable = False, unique = True)
-    supervisor_password = db.Column(db.String(20), nullable = False, unique = False)
-    site_eng_id = db.Column(db.String(6), db.ForeignKey("SiteEngineerDetails.site_eng_id"), nullable = False, unique = True)
+    __tablename__ = "SupervisorDetails"                                                     # Name of the table
+    supervisor_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False) # ID of the supervisor
+    supervisor_name = db.Column(db.String(30), nullable = False, unique = False)            # Supervisor name
+    supervisor_phone = db.Column(db.Integer, nullable = False, unique = True)               # Supervisor Phone number
+    location_id = db.Column(db.String(6), db.ForeignKey("LocationData.location_id"), nullable = False, unique = True) # ID of the location where the Site Engineer is working used as a foreign key
+    site_id = db.Column(db.String(6), db.ForeignKey("SiteData.site_id"), nullable = False, unique = True) # ID of the site being used as a foreign key
+    project_id = db.Column(db.String(6), db.ForeignKey("ProjectData.project_id"), nullable = False, unique = True) # ID of the Project being used as a foreign key
+    supervisor_email = db.Column(db.String(40), nullable = False, unique = True)            # Email of the supervisor
+    supervisor_password = db.Column(db.String(20), nullable = False, unique = False)        # Password of the supervisor
+    site_eng_id = db.Column(db.String(6), db.ForeignKey("SiteEngineerDetails.site_eng_id"), nullable = False, unique = True) # ID of the supervisor being used as foreign key
 
+
+
+''' Boss table contains the details of Boss and some subordinates who can control all the data '''
 class Boss(db.Model):
-    __tablename__ = "Boss"
-    boss_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False)
-    boss_name = db.Column(db.String(30), nullable = False, unique = False)
-    boss_email = db.Column(db.String(40), nullable = False, unique = True)
-    boss_password = db.Column(db.String(20), nullable = False, unique = False)
+    __tablename__ = "Boss"                                                                 # Name of the table
+    boss_id = db.Column(db.String(6), unique = True, primary_key = True, nullable = False) # ID of the boss
+    boss_name = db.Column(db.String(30), nullable = False, unique = False)                 # Name of the boss
+    boss_email = db.Column(db.String(40), nullable = False, unique = True)                 # Email of the boss
+    boss_password = db.Column(db.String(20), nullable = False, unique = False)             # Password of the boss
