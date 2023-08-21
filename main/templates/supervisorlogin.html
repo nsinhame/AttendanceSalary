@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block head %}                       <!-- Use block head as head tag. By default it will use properties defined in layout's head tag -->
+
+<link rel="stylesheet" href={{ url_for('static', filename='home.css') }}>  <!-- Using CSS file stored in static folder -->
+
+{% endblock head %}
+
+{% block content %}
+<div class = "center">
+<a href="#" class="button button-grad" size="50px">Boss Login</a>
+<br><br><br>
+
+
+<form method="POST" action ="/take_attendance">
+    <input type="submit" value="Take Attendance">
+</form>
+<br><br>
+
+<form method="POST" action ="/view_attendance">
+    <input type="submit" value="View Attendance">
+</form>
+<br><br>
+
+
+</div>
+
+{% endblock content %}

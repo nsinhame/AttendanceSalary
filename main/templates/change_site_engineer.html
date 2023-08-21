@@ -1,4 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
-<p>change site engineer</p>
+<p>Change Site Engineer</p><br>
+<form action="/search_site_engineer" method="POST">
+    <label for="choose_site_engineer_option">Search a Site Engineer by: </label>
+        <select name="option_site_engineer" id="option_site_engineer">
+            <option value="site_eng_id">ID</option>  
+            <option value="site_eng_name">Name</option>
+            <option value="site_id">Site ID</option>
+        </select>
+    <label for="search_attribute_site_eng">Enter the above selected attribute: </label>
+    <input type="text" name="search_attribute_site_eng" id="search_attribute_site_eng"><br><br>
+
+</form>
 {% endblock content %}
