@@ -1,0 +1,26 @@
+<!-- For trial, can be deleted -->
+
+
+
+
+
+
+
+
+
+{% extends "layout.html" %}
+{% block head %}
+<link rel="stylesheet" href={{ url_for('static', filename='home.css') }}> 
+{% endblock head %}
+
+{% block content %}
+
+<form method="POST" action ="/add_sample_data">
+    <input type="submit" value="Add all sample data">
+</form>
+
+<form method="POST" action ="/view_all_data">
+    <input type="submit" value="View all sample sata">
+</form>
+
+{% endblock content %}

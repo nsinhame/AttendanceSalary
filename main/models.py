@@ -32,10 +32,10 @@ class WorkerDetail(db.Model):
     worker_gender = db.Column(db.String(1), nullable = False, unique = False)                 # Worker's gender, can be F (female), M (male) or O (other)
     worker_aadhar_number = db.Column(db.Integer, nullable = False, unique = True)             # Worker's aadhar card number
     # Bank Details for the worker for making a payment                                        
-    worker_account_number = db.Column(db.Integer, nullable = False, unique = False)           # Worker's account number
+    worker_account_number = db.Column(db.Integer, nullable = False, unique = True)           # Worker's account number
     worker_ifsc_code = db.Column(db.String(12), nullable = False, unique = False)             # Worker's IFSC code
-    worker_bank_name = db.Column(db.String(35), nullable = False, unique = True)              # Worker's Bank Name
-    worker_bank_branch_name = db.Column(db.String(40), nullable = False, unique = True)       # Worker's Bank Branch Name
+    worker_bank_name = db.Column(db.String(35), nullable = False, unique = False)              # Worker's Bank Name
+    worker_bank_branch_name = db.Column(db.String(40), nullable = False, unique = False)       # Worker's Bank Branch Name
     # Bank Details ended
     worker_join_date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow, unique = False) # Date of joining
     worker_salary = db.Column(db.Integer, nullable = False, unique = False)                   # Per day salary of the worker

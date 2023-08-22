@@ -2,7 +2,7 @@
 
 from main import app, db, bcrypt
 from flask import render_template, redirect, url_for, flash, request
-from main.models import WorkerPrimary, WorkerTodayAttendance, WorkerAttendance, WorkerSalary, LocationData, SiteData, ProjectData, SiteEngineerDetails, SupervisorDetails, Boss
+from main.models import WorkerPrimary, WorkerDetail, WorkerTodayAttendance, WorkerAttendance, WorkerSalary, LocationData, SiteData, ProjectData, SiteEngineerDetails, SupervisorDetails, Boss
 from datetime import datetime, timedelta
 import calendar
 from flask_login import login_user, current_user, logout_user, login_required
@@ -154,18 +154,141 @@ def supervisorlogin():
 #````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````#
 
 
-@app.route("/take_attendance", method = ["POST"])
+@app.route("/take_attendance", methods = ["POST"])
 def take_attendance():
-    return render_template("take_attendance", title ="Take Attendance")
+    return render_template("take_attendance.html", title ="Take Attendance")
 
 
-@app.route("/view_attendance", method = ["POST"])
-def take_attendance():
-    return render_template("view_attendance", title ="View Attendance")
+@app.route("/view_attendance", methods = ["POST"])
+def view_attendance():
+    return render_template("view_attendance.html", title ="View Attendance")
 
-@app.route("/edit_attendance", method = ["POST"])
-def take_attendance():
-    return render_template("edit_attendance", title ="Edit Attendance")
+@app.route("/edit_attendance", methods = ["POST"])
+def edit_attendance():
+    return render_template("edit_attendance.html", title ="Edit Attendance")
 
 
 
+
+
+
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! This is for testing !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+import string
+import random
+n = 6
+
+@app.route("/add_data", methods = ["POST"])
+def add_data():
+    return render_template("add_data.html", title = "Add sample data")
+
+@app.route("/add_sample_data", methods = ["POST"])
+def add_sample_data():
+    for i in range(1, 16):
+        res = "".join(random.choices(string.ascii_uppercase +
+                             string.digits, k=n))
+        data = WorkerPrimary(worker_id = f"{i}",
+                            worker_name = str(res))                      
+        print(data)
+        db.session.add(data)                                                
+        db.session.commit()
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        
+        data = WorkerDetail(worker_id = f"{i}", 
+                            worker_name = str(res),
+                            worker_phone_number = random.randint(60000000, 9999999999),
+                            worker_address = "12, Asd Rty, Lkj",
+                            worker_gender = "M",
+                            worker_aadhar_number = random.randint(60000000, 9999999999),
+                            worker_account_number = random.randint(60000000, 9999999999),
+                            worker_ifsc_code = "eqw233",
+                            worker_bank_name = "Bank of India",
+                            worker_bank_branch_name = "Lksd",
+                            worker_join_date = datetime.now(),
+                            worker_salary = 300,
+                            supervisor_id = "01",
+                            site_id = "S01",
+                            still_working = "Y")
+        
+        print(data)
+        db.session.add(data)                                                
+        db.session.commit()
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        
+    data = LocationData(location_id = "L01",
+                        location_name = "Tkjh",
+                        location_state = "Fihjlh",
+                        location_project_number = 3)
+    print(data)
+    db.session.add(data)
+    db.session.commit()
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+
+    data = SiteData(site_id="S01",
+                    site_name ="Tkhj",
+                    location_id = "L01",
+                    site_pincode = 244421,
+                    site_project_number = 2)
+    print(data)
+    db.session.add(data)
+    db.session.commit()
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+
+    data = ProjectData(project_id = "P01",
+                       project_name = "Perw",
+                       site_id = "S01",
+                       location_id = "L01",
+                       site_eng_id = "SE01",
+                       supervisor_id = "SP01",
+                       total_workers = 15)
+    print(data)
+    db.session.add(data)
+    db.session.commit()
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+
+    data = SiteEngineerDetails(site_eng_id = "SE01",
+                               site_eng_name = "Hdsdf",
+                               site_eng_phone = 9312456780,
+                               location_id = "L01",
+                               site_id= "S01",
+                               project_id = "P01",
+                               site_eng_email = "sqf@qe.com",
+                               site_eng_password = "#2ffee")
+    print(data)
+    db.session.add(data)
+    db.session.commit()
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+
+    data = SupervisorDetails(supervisor_id = "SP01",
+                             supervisor_name = "Pofff",
+                             supervisor_phone = 8907654321,
+                             location_id = "L01",
+                             site_id = "S01",
+                             project_id = "P01",
+                             supervisor_email = "rw2@ggg.in",
+                             supervisor_password = "p$55y",
+                             site_eng_id = "SE01")
+    
+    return render_template("add_data.html", title = "Added data")
+
+
+
+@app.route("/view_all_data", methods = ["POST"])
+def view_all_data():
+    worker_primary = WorkerPrimary.query.all()
+    worker_detail = WorkerDetail.query.all()
+    location_data = LocationData.query.all()
+    site_data = SiteData.query.all()
+    project_data = ProjectData.query.all()
+    site_eng_detail = SiteEngineerDetails.query.all()
+    supervisors_details = SupervisorDetails.query.all()
+    
+    
+    return render_template("view_all_data.html", title = "View all data", 
+                           worker_primary=worker_primary, worker_detail=worker_detail, 
+                           location_data=location_data, site_data=site_data,
+                           project_data=project_data, site_eng_detail=site_eng_detail,
+                           supervisors_details=supervisors_details)
