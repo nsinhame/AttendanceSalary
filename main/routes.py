@@ -154,9 +154,34 @@ def supervisorlogin():
 #````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````#
 
 
-@app.route("/take_attendance", methods = ["POST"])
-def take_attendance():
-    return render_template("take_attendance.html", title ="Take Attendance")
+@app.route("/take_morning_attendance", methods = ["POST"])
+def take_morning_attendance():
+    worker_attendance = WorkerDetail.query.all()
+    site_name = SiteData.query.filter_by(site_id = worker_attendance[0].site_id).first()
+    site_name = site_name.site_name
+    date_time = datetime.now()
+    attendance_date = date_time.strftime("%d/%m/%Y")
+    return render_template("take_morning_attendance.html", title ="Take Attendance", worker_attendance=worker_attendance, site_name = site_name, attendance_date = attendance_date)
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~` Sample`
+@app.route("/submit_morning_attendance", methods = ["POST"])
+def submit_morning_attendace():
+    
+    return render_template("take_morning_attendance. html", title = "Take Attendance")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @app.route("/view_attendance", methods = ["POST"])
@@ -183,7 +208,7 @@ def add_data():
 
 @app.route("/add_sample_data", methods = ["POST"])
 def add_sample_data():
-    for i in range(1, 16):
+    for i in range(16, 31):
         res = "".join(random.choices(string.ascii_uppercase +
                              string.digits, k=n))
         data = WorkerPrimary(worker_id = f"{i}",
@@ -197,7 +222,7 @@ def add_sample_data():
                             worker_name = str(res),
                             worker_phone_number = random.randint(60000000, 9999999999),
                             worker_address = "12, Asd Rty, Lkj",
-                            worker_gender = "M",
+                            worker_gender = "F",
                             worker_aadhar_number = random.randint(60000000, 9999999999),
                             worker_account_number = random.randint(60000000, 9999999999),
                             worker_ifsc_code = "eqw233",
