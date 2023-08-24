@@ -70,6 +70,7 @@ def add_site_engineer():
 # Add new data for the site engineer
 @app.route("/submit_new_site_engineer", methods = ["POST"])
 def submit_new_site_engineer():
+    # Get all the data from the form
     site_eng_id = request.form["site_eng_id"]
     site_eng_name = request.form["site_eng_name"]
     site_eng_phone = request.form["site_eng_phone"]
@@ -79,28 +80,65 @@ def submit_new_site_engineer():
     site_eng_email = request.form["site_eng_email"]
     site_eng_password = request.form["site_eng_password"]
     
+    # Try to add data
+    try:
+        site_engineer_data = SiteEngineerDetails(site_eng_id=site_eng_id,
+                                                 site_eng_name=site_eng_name,
+                                                 site_eng_phone=site_eng_phone,
+                                                 location_id=location_id,
+                                                 site_id=site_id,
+                                                 project_id=project_id,
+                                                 site_eng_email=site_eng_email,
+                                                 site_eng_password=site_eng_password)
+        # Add the data into data base
+        db.session.add(site_engineer_data)
+        db.session.commit()
+    
+    except Exception as e:
+        flash(f"Got an error: {e}", "warning")
+        return render_template("add_site_engineer.html", title="Add Site Engineer")
+        
+
     ## Add data into the table
     print(site_eng_id, site_eng_name, site_eng_phone, 
           location_id, site_id, project_id, site_eng_email, site_eng_password)
     return render_template("add_site_engineer.html", title = "Add Site Engineer")
 
 
-# Route to the webpage where we can search the site engineer
-app.route("/search_site_engineer", methods = ["POST"])
-def search_site_engineer():
-    option_site_engineer = request.form["option_site_engineer"]
-    search_attribute_site_eng = request.form["search_attribute_site_eng"]
-    
-    # Add searching query
-    print(option_site_engineer ,search_attribute_site_eng)
-    # return render_template("update_site_engineer.html", "Update Site Engineer")
-    return render_template("under_maintainance.html", title = "Under Maintainance")
 
 
 # This is a decorator to change the data of site engineer. Its function call is present in bosslogin.html. 
 @app.route("/change_site_engineer", methods=["POST"])
 def change_site_engineer():                                                                 # Return the webpage where we can change the data of site engineer
     return render_template("change_site_engineer.html", title="Change Site Engineer") 
+
+
+# Route to the webpage where we can search the site engineer. It is available at change_site_engineer.html
+app.route("/search_site_engineer", methods = ["POST"])                                     
+def search_site_engineer():                                                                
+    option_site_engineer = request.form["option_site_engineer"]                            
+    search_attribute_site_eng = request.form["search_attribute_site_eng"]
+    
+    if option_site_engineer == "site_eng_id":
+        selected_site_engineer = SiteEngineerDetails.query.filter_by(site_eng_id = search_attribute_site_eng).first()                  
+                                                                                           
+    if option_site_engineer == "site_eng_name":
+        selected_site_engineer = SiteEngineerDetails.query.filter_by(site_eng_name = search_attribute_site_eng).first()                  
+    
+    if option_site_engineer == "site_id":
+        selected_site_engineer = SiteEngineerDetails.query.filter_by(site_id = search_attribute_site_eng).first()                  
+    
+    # Add searching query   
+    #!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Make This Webpage. Start From Here. @@@@@@@@@@@@@@@@@@@@@@@@@@@                                                               
+    return render_template("update_site_engineer.html", "Update Site Engineer", selected_site_engineer=selected_site_engineer)          
+    # return render_template("under_maintainance.html", title = "Under Maintainance")        
+
+# 
+app.route("/update_site_engineer", methods = ["POST"])
+def update_site_engineer():
+    return render_template("update_site_engineer.html","Update Site Engineer")
+
+
 
 
 # This is a decorator to add a new supervisor. Its function call is present in bosslogin.html. 
@@ -168,7 +206,7 @@ def take_morning_attendance():
 @app.route("/submit_morning_attendance", methods = ["POST"])
 def submit_morning_attendace():
     
-    return render_template("take_morning_attendance. html", title = "Take Attendance")
+    return render_template("take_morning_attendance.html", title = "Take Attendance")
 
 
 
@@ -297,6 +335,8 @@ def add_sample_data():
                              supervisor_password = "p$55y",
                              site_eng_id = "SE01")
     
+    db.session.add(data)
+    db.session.commit()
     return render_template("add_data.html", title = "Added data")
 
 
@@ -309,11 +349,11 @@ def view_all_data():
     site_data = SiteData.query.all()
     project_data = ProjectData.query.all()
     site_eng_detail = SiteEngineerDetails.query.all()
-    supervisors_details = SupervisorDetails.query.all()
+    supervisor_detail = SupervisorDetails.query.all()
     
     
     return render_template("view_all_data.html", title = "View all data", 
                            worker_primary=worker_primary, worker_detail=worker_detail, 
                            location_data=location_data, site_data=site_data,
                            project_data=project_data, site_eng_detail=site_eng_detail,
-                           supervisors_details=supervisors_details)
+                           supervisor_detail=supervisor_detail)

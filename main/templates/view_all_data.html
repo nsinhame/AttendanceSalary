@@ -111,8 +111,85 @@
     {% endfor %}
 </table>
 
+<br>
+<h1> Project Data </h1>
+<table border="2">
+    <tr>
+        <th>Project ID</th>
+        <th>Name</th>
+        <th>Site ID</th>
+        <th>Location ID</th>
+        <th>Site Engineer ID</th>
+        <th>Supervisor ID</th>
+        <th>Total Workers</th>
+    </tr>
+    {% for i in project_data %}
+    <tr>
+        <td>{{i.project_id}}</td>
+        <td>{{i.project_name}}</td>
+        <td>{{i.site_id}}</td>
+        <td>{{i.location_id}}</td>
+        <td>{{i.site_eng_id}}</td>
+        <td>{{i.supervisor_id}}</td>
+        <td>{{i.total_workers}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
 
+<h1> Site Engineer Data </h1>
+<table border ="2">
+    <tr>
+        <th>Site Engineer ID</th>
+        <th>Name</th>
+        <th>Phone Number</th>
+        <th>Location ID</th>
+        <th>Site ID</th>
+        <th>Project ID</th>
+        <th>Email</th>
+        <th>Password</th>
+    </tr>
+    {% for i in site_eng_detail %}
+    <tr>
+        <td>{{i.site_eng_id}}</td>
+        <td>{{i.site_eng_name}}</td>
+        <td>{{i.site_eng_phone}}</td>
+        <td>{{i.location_id}}</td>
+        <td>{{i.site_id}}</td>
+        <td>{{i.project_id}}</td>
+        <td>{{i.site_eng_email}}</td>
+        <td>{{i.site_eng_password}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
 
-
-
+<h1> Supervisor Details </h1>
+<table border="2">
+    <tr>
+        <th>Supervisor ID</th>
+        <th>Name</th>
+        <th>Phone Number</th>
+        <th>Location ID</th>
+        <th>Site ID</th>
+        <th>Project ID</th>
+        <th>Email</th>
+        <th>Password</th>
+        <th>Site Engineer ID</th>
+    </tr>
+    {% for i in supervisor_detail %}
+    <tr>
+        <td>{{i.supervisor_id}}</td>
+        <td>{{i.supervisor_name}}</td>
+        <td>{{i.supervisor_phone}}</td>
+        <td>{{i.location_id}}</td>
+        <td>{{i.site_id}}</td>
+        <td>{{i.project_id}}</td>
+        <td>{{i.supervisor_email}}</td>
+        <td>{{i.supervisor_password}}</td>
+        <td>{{i.site_eng_id}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br><br><br><br><br>
 {% endblock content %}
