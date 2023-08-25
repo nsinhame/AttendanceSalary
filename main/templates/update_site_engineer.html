@@ -1,0 +1,60 @@
+<!-- Have to work on this -->
+
+
+
+
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- Heading of the webpage -->
+<h1><a href="#" class="button button-grad" size="50px">Upade Site Engineer</a></h1>
+<h1> Site Engineer's {{ attribute_site_engineer }}: {{ selected_site_engineer }}</h1>
+<br>{{ search_attribute_site_eng }}
+<br><br><br>
+
+
+<!-- Start of HTML form to get data of new order -->
+<form method="POST" action ="/submit_change_site_engineer/{{ search_attribute_site_eng }}">
+
+    <!-- Get ID of the Site Engineer -->
+    <label for="site_eng_id">Site Engineer ID: </label>
+    <input type="text" name="site_eng_id" id="site_eng_id"><br><br>
+
+    <!-- Get name of the Site Engineer -->
+    <label for="site_eng_name">Name: </label>
+    <input type="text" name="site_eng_name" id="site_eng_name"><br><br>
+    
+    <!-- Get phone number of the Site Engineer -->
+    <label for="site_eng_phone">Phone Number: </label>
+    <input type="text" name="site_eng_phone" id="site_eng_phone"><br><br>
+
+    <!-- Get Location ID of the Site Engineer -->
+    <label for="location_id">Location ID: </label>
+    <input type="text" name="location_id" id="location_id"><br><br>
+    
+    <!-- Get Site ID of the Site Engineer -->
+    <label for="site_id">Site ID: </label>
+    <input type="text" name="site_id" id="site_id"><br><br>
+    
+    <!-- Get Project ID of the Site Engineer -->
+    <label for="project_id">Project ID: </label>
+    <input type="text" name="project_id" id="project_id"><br><br>
+
+    <!-- Get Email of the Site Engineer -->
+    <label for="site_eng_email">Email: </label>
+    <input type="email" name="site_eng_email" id="site_eng_email"><br><br>
+    
+    <!-- Get Password of the Site Engineer -->
+    <label for="site_eng_password">Password: </label>
+    <input type="password" name="site_eng_password" id="site_eng_password"><br><br>
+
+    <!-- Submit the data -->
+    <input type="submit" value="Submit">
+</form>
+<!-- End of the form -->
+
+<form method="POST" action ="/change_site_engineer">
+    <input type="submit" value="Back">
+</form>
+
+{% endblock content %}

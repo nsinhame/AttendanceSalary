@@ -1,15 +1,26 @@
+<!-- Search the site engineer and select the particular site engineer to change -->
+
 {% extends "layout.html" %}
 {% block content %}
 <p>Change Site Engineer</p><br>
-<form action="/search_site_engineer" method="POST">
-    <label for="choose_site_engineer_option">Search a Site Engineer by: </label>
-        <select name="option_site_engineer" id="option_site_engineer">
+<form method="POST" action="/search_site_engineer">
+    <label for="option_site_engineer">Search a Site Engineer by: </label>
+        <select title= "option_site_engineer" name="option_site_engineer" id="option_site_engineer">
             <option value="site_eng_id">ID</option>  
             <option value="site_eng_name">Name</option>
             <option value="site_id">Site ID</option>
         </select>
+    <br><br>
     <label for="search_attribute_site_eng">Enter the above selected attribute: </label>
     <input type="text" name="search_attribute_site_eng" id="search_attribute_site_eng"><br><br>
+    <br>
+
+    <input type="submit" value="Submit">
 
 </form>
+
+<form method="POST" action ="/bosslogin">
+    <input type="submit" value="Back">
+</form>
+
 {% endblock content %}

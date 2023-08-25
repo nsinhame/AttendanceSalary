@@ -13,31 +13,31 @@
 <h2> Site: {{ worker_attendance[0].site_id }}</h2>
 <h2> Date: {{ attendance_date }}</h2>
 <br>
-<form method="POST" action="/submit_morning_attendance"></form>
-<table border="2">
-    <tr>
-        <th> Worker ID </th>
-        <th> Worker Name </th>
-        <th> Site Name </th>
-        <th> Attendance Status </th>
+<form method="POST" action="/submit_morning_attendance">
+    <table border="2">
+        <tr>
+            <th> Worker ID </th>
+            <th> Worker Name </th>
+            <th> Site Name </th>
+            <th> Attendance Status </th>
         
-    </tr>
+        </tr>
     
-    {% for i in worker_attendance %}
-    <tr>
-        <td>{{ i.worker_id }}</td>
-        <td>{{ i.worker_name }}</td>
-        <td>{{ site_name }}</td>
-        <td>
-            <input type="checkbox" id="present" name="present" value="present">
-                <label for="present"> Present</label>
-        </td>
-    </tr>
-    {% endfor %}
+        {% for i in worker_attendance %}
+        <tr>
+            <td>{{ i.worker_id }}</td>
+            <td>{{ i.worker_name }}</td>
+            <td>{{ site_name }}</td>
+            <td>
+                <input type="checkbox" id="present" name="present" value="{{ i.worker_id }}">
+                    <label for="present"> Present</label>
+            </td>
+        </tr>
+        {% endfor %}
     
-    
-</table>
-<br><br>
-<input type="submit" value="Submit">
+
+    </table>
+        <br><br>
+        <input type="submit" value="Submit">
 </form>
 {% endblock content %}

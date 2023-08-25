@@ -50,9 +50,10 @@ class WorkerDetail(db.Model):
 class WorkerTodayAttendance(db.Model):
     __tablename__ = "WorkerTodayAttendance"                                                   # Name of the table
     worker_id = db.Column(db.String(6), db.ForeignKey("WorkerPrimary.worker_id"), primary_key = True, nullable = False)  # Worker ID is a foreign key from Worker Primary table
-    attendance_status = db.Column(db.String(1), nullable = False, unique = False)  # Attendance status can be P (Present), A (Absent), or H (Half time)
+    morning_attendance_status = db.Column(db.String(1), nullable = True, unique = False)  # Attendance status can be P (Present), A (Absent), or H (Half time)
+    evening_attendance_status = db.Column(db.String(1), nullable = True, unique = False)  # Attendance status can be P (Present), A (Absent), or H (Half time)
     attendance_date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow, unique = False)  # Date of the attendance
-    did_overtime = db.Column(db.String(1), nullable = False, unique = False)                  # Did Overtime can be Y (Yes) or N (No)
+    did_overtime = db.Column(db.String(1), nullable = True, unique = False)                  # Did Overtime can be Y (Yes) or N (No)
     overtime_today = db.Column(db.Integer, nullable = True, unique = False)                   # Overtime Today store an integer value which is the number of hours a worker has worked. It can be roundoff to ciel value.
 
 

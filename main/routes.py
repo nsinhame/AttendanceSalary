@@ -3,7 +3,7 @@
 from main import app, db, bcrypt
 from flask import render_template, redirect, url_for, flash, request
 from main.models import WorkerPrimary, WorkerDetail, WorkerTodayAttendance, WorkerAttendance, WorkerSalary, LocationData, SiteData, ProjectData, SiteEngineerDetails, SupervisorDetails, Boss
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import calendar
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -110,33 +110,60 @@ def submit_new_site_engineer():
 # This is a decorator to change the data of site engineer. Its function call is present in bosslogin.html. 
 @app.route("/change_site_engineer", methods=["POST"])
 def change_site_engineer():                                                                 # Return the webpage where we can change the data of site engineer
+    
     return render_template("change_site_engineer.html", title="Change Site Engineer") 
 
 
 # Route to the webpage where we can search the site engineer. It is available at change_site_engineer.html
-app.route("/search_site_engineer", methods = ["POST"])                                     
+@app.route("/search_site_engineer", methods = ["POST"])                                     
 def search_site_engineer():                                                                
     option_site_engineer = request.form["option_site_engineer"]                            
     search_attribute_site_eng = request.form["search_attribute_site_eng"]
     
     if option_site_engineer == "site_eng_id":
-        selected_site_engineer = SiteEngineerDetails.query.filter_by(site_eng_id = search_attribute_site_eng).first()                  
+        selected_site_engineer = SiteEngineerDetails.query.filter_by(site_eng_id = search_attribute_site_eng).first()       
+        attribute_site_engineer = "ID"                    # This is used to tell which attribute is used to search the site engineer           
                                                                                            
     if option_site_engineer == "site_eng_name":
-        selected_site_engineer = SiteEngineerDetails.query.filter_by(site_eng_name = search_attribute_site_eng).first()                  
+        selected_site_engineer = SiteEngineerDetails.query.filter_by(site_eng_name = search_attribute_site_eng).first()             
+        attribute_site_engineer = "Name"                    # This is used to tell which attribute is used to search the site engineer     
     
     if option_site_engineer == "site_id":
         selected_site_engineer = SiteEngineerDetails.query.filter_by(site_id = search_attribute_site_eng).first()                  
+        attribute_site_engineer = "Site ID"                    # This is used to tell which attribute is used to search the site engineer
     
-    # Add searching query   
-    #!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Make This Webpage. Start From Here. @@@@@@@@@@@@@@@@@@@@@@@@@@@                                                               
-    return render_template("update_site_engineer.html", "Update Site Engineer", selected_site_engineer=selected_site_engineer)          
+    # Add searching query                                                               
+    return render_template("update_site_engineer.html", title="Update Site Engineer", selected_site_engineer=selected_site_engineer, option_site_engineer=option_site_engineer,
+                           attribute_site_engineer=attribute_site_engineer, search_attribute_site_eng=search_attribute_site_eng)          
     # return render_template("under_maintainance.html", title = "Under Maintainance")        
 
-# 
-app.route("/update_site_engineer", methods = ["POST"])
+
+@app.route("/update_site_engineer", methods = ["POST"])
 def update_site_engineer():
-    return render_template("update_site_engineer.html","Update Site Engineer")
+    return render_template("update_site_engineer.html", title = "Update Site Engineer")
+
+
+# Need Working on this. IDs are accepted but name and site id gives error
+@app.route("/submit_change_site_engineer/<string:id>", methods = ["GET","POST"])
+def submit_change_site_engineer(id):
+    site_engineer = SiteEngineerDetails.query.get(id)
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(site_engineer, id)
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(site_engineer.site_eng_id, site_engineer.site_eng_name, site_engineer.site_eng_phone)
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!") 
+    return render_template("/change_site_engineer.html", title = "Change Site Engineer")
+    
+
+
+
+
+
+
+
 
 
 
@@ -205,8 +232,23 @@ def take_morning_attendance():
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~` Sample`
 @app.route("/submit_morning_attendance", methods = ["POST"])
 def submit_morning_attendace():
+    present_workers = request.form.getlist("present")
+    for worker in present_workers:
+        attendance = WorkerTodayAttendance(worker_id = worker,
+                                           morning_attendance_status = "P",
+                                           attendance_date = date.today())
+        
+        db.session.add(attendance)
+        db.session.commit()
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(present_workers)
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     
-    return render_template("take_morning_attendance.html", title = "Take Attendance")
+    return render_template("siteengeerlogin.html", title = "Site Engineer Login")
 
 
 
@@ -246,7 +288,7 @@ def add_data():
 
 @app.route("/add_sample_data", methods = ["POST"])
 def add_sample_data():
-    for i in range(16, 31):
+    for i in range(1, 16):
         res = "".join(random.choices(string.ascii_uppercase +
                              string.digits, k=n))
         data = WorkerPrimary(worker_id = f"{i}",
@@ -350,10 +392,11 @@ def view_all_data():
     project_data = ProjectData.query.all()
     site_eng_detail = SiteEngineerDetails.query.all()
     supervisor_detail = SupervisorDetails.query.all()
-    
+    worker_today_attendance = WorkerTodayAttendance.query.all()
     
     return render_template("view_all_data.html", title = "View all data", 
                            worker_primary=worker_primary, worker_detail=worker_detail, 
                            location_data=location_data, site_data=site_data,
                            project_data=project_data, site_eng_detail=site_eng_detail,
-                           supervisor_detail=supervisor_detail)
+                           supervisor_detail=supervisor_detail,
+                           worker_today_attendance=worker_today_attendance)
