@@ -1,4 +1,73 @@
 {% extends "layout.html" %}
+{% block head %}
+<link rel="stylesheet" href={{ url_for('static', filename='home.css') }}> 
+{% endblock head %}
+
 {% block content %}
-<p>check attendance</p>
+
+
+<h1> Worker Today Morning Attendance </h1>
+<table border ="2">
+    <tr>
+        <th>Worker ID</th>
+        <th>Morning Attendance</th>
+        <th>Attendance Date</th>
+    </tr>
+    {% for i in worker_today_morning_attendance %}
+    <tr>
+        <td>{{ i.worker_id }}</td>
+        <td>{{ i.morning_attendance_status }}</td>
+        <td>{{ i.attendance_date }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<h1> Worker Today Evening Attendance </h1>
+<table border ="2">
+    <tr>
+        <th>Worker ID</th>
+        <th>Evening Attendance</th>
+        <th>Attendance Date</th>
+        <th>Did Overtime</th>
+        <th>Overtime Today</th>
+    </tr>
+    {% for i in worker_today_evening_attendance %}
+    <tr>
+        <td>{{ i.worker_id }}</td>
+        <td>{{ i.evening_attendance_status }}</td>
+        <td>{{ i.attendance_date }}</td>
+        <td>{{ i.did_overtime }}</td>
+        <td>{{ i.overtime_today }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<h1> Worker Today Attendance </h1>
+<table border ="2">
+    <tr>
+        <th>Row ID</th>
+        <th>Worker ID</th>
+        <th>Attendance Date</th>
+        <th>Attendance Month</th>
+        <th>Attendance Year</th>
+        <th>Overtime Hours</th>
+        <th>Attendance Status</th>
+    </tr>
+    {% for i in worker_attendance %}
+    <tr>
+        <td>{{ i.row_id }}</td>
+        <td>{{ i.worker_id }}</td>
+        <td>{{ i.attendance_date }}</td>
+        <td>{{ i.attendance_month }}</td>
+        <td>{{ i.attendance_year }}</td>
+        <td>{{ i.overtime_hours }}</td>
+        <td>{{ i.attendance_status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+<br><br><br><br><br>
 {% endblock content %}

@@ -353,7 +353,12 @@ def add_full_day_attendance():
 
 @app.route("/view_attendance", methods = ["POST"])
 def view_attendance():
-    return render_template("view_attendance.html", title ="View Attendance")
+    worker_today_morning_attendance = WorkerTodayMorningAttendance.query.all()
+    worker_today_evening_attendance = WorkerTodayEveningAttendance.query.all()
+    worker_attendance = WorkerAttendance.query.all()
+    return render_template("view_attendance.html", title ="View Attendance", worker_today_morning_attendance=worker_today_morning_attendance,
+                           worker_today_evening_attendance=worker_today_evening_attendance,
+                           worker_attendance=worker_attendance)
 
 @app.route("/edit_attendance", methods = ["POST"])
 def edit_attendance():
