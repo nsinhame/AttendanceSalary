@@ -1,0 +1,45 @@
+<!-- Take today's evening attendance attendance -->
+
+{% extends "layout.html" %}
+{% block head %}                       <!-- Use block head as head tag. By default it will use properties defined in layout's head tag -->
+
+<link rel="stylesheet" href={{ url_for('static', filename='home.css') }}>  <!-- Using CSS file stored in static folder -->
+
+{% endblock head %}
+{% block content %}
+
+<h1> Worker Attendance </h1>
+<br>
+<h2> Site: {{ worker_attendance[0].site_id }}</h2>
+<h2> Date: {{ attendance_date }}</h2>
+<br>
+<form method="POST" action="/submit_evening_attendance">
+    <table border="2">
+        <tr>
+            <th> Worker ID </th>
+            <th> Worker Name </th>
+            <th> Site Name </th>
+            <th> Overtime Hours<br>(write 0 if not any) </th>
+            <th> Attendance Status </th>
+        
+        </tr>
+    
+        {% for i in worker_attendance %}
+        <tr>
+            <td>{{ i.worker_id }}</td>
+            <td>{{ i.worker_name }}</td>
+            <td>{{ site_name }}</td>
+            <td><input type="text" id="overtime_hour" name="overtime_hour"></td>
+            <td>
+                <input type="checkbox" id="present" name="present" value="{{ i.worker_id }}">
+                    <label for="present"> Present</label>
+            </td>
+        </tr>
+        {% endfor %}
+    
+
+    </table>
+        <br><br>
+        <input type="submit" value="Submit">
+</form>
+{% endblock content %}

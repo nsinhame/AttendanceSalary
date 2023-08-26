@@ -2,7 +2,7 @@
 
 from main import app, db, bcrypt
 from flask import render_template, redirect, url_for, flash, request
-from main.models import WorkerPrimary, WorkerDetail, WorkerTodayAttendance, WorkerAttendance, WorkerSalary, LocationData, SiteData, ProjectData, SiteEngineerDetails, SupervisorDetails, Boss
+from main.models import WorkerPrimary, WorkerDetail, WorkerTodayMorningAttendance, WorkerTodayEveningAttendance, WorkerAttendance, WorkerSalary, LocationData, SiteData, ProjectData, SiteEngineerDetails, SupervisorDetails, Boss
 from datetime import datetime, timedelta, date
 import calendar
 from flask_login import login_user, current_user, logout_user, login_required
@@ -219,6 +219,9 @@ def supervisorlogin():
 #````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````#
 
 
+
+
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Attendance system @@@@@@@@@@@@@@@@@@@@@@@@@@@
 @app.route("/take_morning_attendance", methods = ["POST"])
 def take_morning_attendance():
     worker_attendance = WorkerDetail.query.all()
@@ -233,22 +236,76 @@ def take_morning_attendance():
 @app.route("/submit_morning_attendance", methods = ["POST"])
 def submit_morning_attendace():
     present_workers = request.form.getlist("present")
+    all_workers = WorkerPrimary.query.all()
+    absent_workers = [x.worker_id for x in all_workers if x.worker_id not in present_workers]
+    
+    # MArk present
     for worker in present_workers:
-        attendance = WorkerTodayAttendance(worker_id = worker,
+        attendance = WorkerTodayMorningAttendance(worker_id = worker,
                                            morning_attendance_status = "P",
                                            attendance_date = date.today())
+    
+        db.session.add(attendance)
+        db.session.commit()
+    
+    # Mark absent
+    for worker in absent_workers:
+        attendance = WorkerTodayMorningAttendance(worker_id = worker,
+                                           morning_attendance_status = "A",
+                                           attendance_date = date.today())
+        
         
         db.session.add(attendance)
         db.session.commit()
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print(present_workers)
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     
-    return render_template("siteengeerlogin.html", title = "Site Engineer Login")
+    
+    return render_template("siteengineerlogin.html", title = "Site Engineer Login")
+
+
+# For evening attendance
+@app.route("/take_evening_attendance", methods = ["POST"])
+def take_evening_attendance():
+    worker_attendance = WorkerDetail.query.all()
+    site_name = SiteData.query.filter_by(site_id = worker_attendance[0].site_id).first()
+    site_name = site_name.site_name
+    date_time = datetime.now()
+    attendance_date = date_time.strftime("%d/%m/%Y")
+    return render_template("take_evening_attendance.html", title ="Take Attendance", worker_attendance=worker_attendance, site_name = site_name, attendance_date = attendance_date)
+
+
+################## Work on this
+@app.route("/submit_evening_attendance", methods = ["POST"])
+def submit_evening_attendace():
+    present_workers = request.form.getlist("present")
+    overtime_hour_work = request.form.getlist("overtime_hour")
+    all_workers = WorkerPrimary.query.all()
+    absent_workers = [x.worker_id for x in all_workers if x.worker_id not in present_workers]
+    all_workers_id = [x.worker_id for x in all_workers]
+    worker_dict = dict(zip(all_workers_id, overtime_hour_work))
+    
+    
+    
+    for worker in present_workers:
+        attendance = WorkerTodayEveningAttendance(worker_id = worker,
+                                           evening_attendance_status = "P",
+                                           attendance_date = date.today(),
+                                           overtime_today = worker_dict[worker])
+    
+        db.session.add(attendance)
+        db.session.commit()
+    
+    # Mark absent
+    for worker in absent_workers:
+        attendance = WorkerTodayEveningAttendance(worker_id = worker,
+                                           evening_attendance_status = "A",
+                                           attendance_date = date.today(),
+                                           overtime_today = 0)
+        
+        
+        db.session.add(attendance)
+        db.session.commit()
+    
+    return render_template("siteengineerlogin.html", title = "Site Engineer Login")
 
 
 
@@ -374,7 +431,7 @@ def add_sample_data():
                              site_id = "S01",
                              project_id = "P01",
                              supervisor_email = "rw2@ggg.in",
-                             supervisor_password = "p$55y",
+                             supervisor_password = "pwx5y",
                              site_eng_id = "SE01")
     
     db.session.add(data)
@@ -392,11 +449,13 @@ def view_all_data():
     project_data = ProjectData.query.all()
     site_eng_detail = SiteEngineerDetails.query.all()
     supervisor_detail = SupervisorDetails.query.all()
-    worker_today_attendance = WorkerTodayAttendance.query.all()
+    worker_today_morning_attendance = WorkerTodayMorningAttendance.query.all()
+    worker_today_evening_attendance = WorkerTodayEveningAttendance.query.all()
     
     return render_template("view_all_data.html", title = "View all data", 
                            worker_primary=worker_primary, worker_detail=worker_detail, 
                            location_data=location_data, site_data=site_data,
                            project_data=project_data, site_eng_detail=site_eng_detail,
                            supervisor_detail=supervisor_detail,
-                           worker_today_attendance=worker_today_attendance)
+                           worker_today_morning_attendance=worker_today_morning_attendance,
+                           worker_today_evening_attendance=worker_today_evening_attendance)

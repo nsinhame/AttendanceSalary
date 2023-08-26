@@ -45,16 +45,27 @@ class WorkerDetail(db.Model):
 
 
 
-''' Worker Today Attendance contains attendance of only today. It gets reset at after 3 AM everyday. It's data is transfered into 
+''' Worker Today Morning Attendance contains attendance of only today morning. It gets reset at after 3 AM everyday. It's data is transfered into 
     Worker Attendance table after every 24 hours.'''
-class WorkerTodayAttendance(db.Model):
-    __tablename__ = "WorkerTodayAttendance"                                                   # Name of the table
+class WorkerTodayMorningAttendance(db.Model):
+    __tablename__ = "WorkerTodayMorningAttendance"                                                   # Name of the table
     worker_id = db.Column(db.String(6), db.ForeignKey("WorkerPrimary.worker_id"), primary_key = True, nullable = False)  # Worker ID is a foreign key from Worker Primary table
     morning_attendance_status = db.Column(db.String(1), nullable = True, unique = False)  # Attendance status can be P (Present), A (Absent), or H (Half time)
+    attendance_date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow, unique = False)  # Date of the attendance
+    
+
+
+''' Worker Today Evening Attendance contains attendance of only today evening. It gets reset at after 3 AM everyday. It's data is transfered into 
+    Worker Attendance table after every 24 hours.'''
+class WorkerTodayEveningAttendance(db.Model):
+    __tablename__ = "WorkerTodayEveningAttendance"                                                   # Name of the table
+    worker_id = db.Column(db.String(6), db.ForeignKey("WorkerPrimary.worker_id"), primary_key = True, nullable = False)  # Worker ID is a foreign key from Worker Primary table
     evening_attendance_status = db.Column(db.String(1), nullable = True, unique = False)  # Attendance status can be P (Present), A (Absent), or H (Half time)
     attendance_date = db.Column(db.DateTime, nullable = False, default = datetime.utcnow, unique = False)  # Date of the attendance
+    # Not adding this for now
     did_overtime = db.Column(db.String(1), nullable = True, unique = False)                  # Did Overtime can be Y (Yes) or N (No)
     overtime_today = db.Column(db.Integer, nullable = True, unique = False)                   # Overtime Today store an integer value which is the number of hours a worker has worked. It can be roundoff to ciel value.
+
 
 
 
