@@ -229,6 +229,31 @@
     {% endfor %}
 </table>
 
+<br>
+<h1> Worker Today Attendance </h1>
+<table border ="2">
+    <tr>
+        <th>Row ID</th>
+        <th>Worker ID</th>
+        <th>Attendance Date</th>
+        <th>Attendance Month</th>
+        <th>Attendance Year</th>
+        <th>Overtime Hours</th>
+        <th>Attendance Status</th>
+    </tr>
+    {% for i in worker_attendance %}
+    <tr>
+        <td>{{ i.row_id }}</td>
+        <td>{{ i.worker_id }}</td>
+        <td>{{ i.attendance_date }}</td>
+        <td>{{ i.attendance_month }}</td>
+        <td>{{ i.attendance_year }}</td>
+        <td>{{ i.overtime_hours }}</td>
+        <td>{{ i.attendance_status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
 
 <br><br><br><br><br>
 {% endblock content %}

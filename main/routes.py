@@ -308,8 +308,38 @@ def submit_evening_attendace():
     return render_template("siteengineerlogin.html", title = "Site Engineer Login")
 
 
+# Check Absent Present Half Day for the day
+def finalize_attendance(id):
+    morning_attendance = WorkerTodayMorningAttendance.query.filter_by(worker_id = id).first()
+    evening_attendance = WorkerTodayEveningAttendance.query.filter_by(worker_id = id).first()
+    
+    
+    if morning_attendance.morning_attendance_status == "P" and evening_attendance.evening_attendance_status == "P":
+        return "P"
+    elif morning_attendance.morning_attendance_status == "A" and evening_attendance.evening_attendance_status == "A":
+        return "A"
+    else:
+        return "H"
+    
 
-
+# Submit the whole day attendance
+@app.route("/add_full_day_attendance", methods = ["POST"])
+def add_full_day_attendance():
+    morning_attendance = WorkerTodayMorningAttendance.query.order_by(WorkerTodayMorningAttendance.worker_id).all()
+    evening_attendance = WorkerTodayEveningAttendance.query.order_by(WorkerTodayEveningAttendance.worker_id).all()
+    
+    for i in evening_attendance:
+        attendance = WorkerAttendance(row_id = random.randint(1, 1000),
+                                      worker_id = i.worker_id,
+                                      attendance_date = i.attendance_date,
+                                      attendance_month = "August",
+                                      attendance_year = "2023",
+                                      overtime_hours = i.overtime_today,
+                                      attendance_status = finalize_attendance(i.worker_id))
+        
+        db.session.add(attendance)
+        db.session.commit()
+    return render_template("siteengineerlogin.html", title = "Site Engineer Login") 
 
 
 
@@ -345,7 +375,7 @@ def add_data():
 
 @app.route("/add_sample_data", methods = ["POST"])
 def add_sample_data():
-    for i in range(1, 16):
+    for i in range(1, 5):
         res = "".join(random.choices(string.ascii_uppercase +
                              string.digits, k=n))
         data = WorkerPrimary(worker_id = f"{i}",
@@ -451,6 +481,8 @@ def view_all_data():
     supervisor_detail = SupervisorDetails.query.all()
     worker_today_morning_attendance = WorkerTodayMorningAttendance.query.all()
     worker_today_evening_attendance = WorkerTodayEveningAttendance.query.all()
+    worker_attendance = WorkerAttendance.query.all()
+    
     
     return render_template("view_all_data.html", title = "View all data", 
                            worker_primary=worker_primary, worker_detail=worker_detail, 
@@ -458,4 +490,5 @@ def view_all_data():
                            project_data=project_data, site_eng_detail=site_eng_detail,
                            supervisor_detail=supervisor_detail,
                            worker_today_morning_attendance=worker_today_morning_attendance,
-                           worker_today_evening_attendance=worker_today_evening_attendance)
+                           worker_today_evening_attendance=worker_today_evening_attendance,
+                           worker_attendance=worker_attendance)
