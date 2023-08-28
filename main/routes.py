@@ -16,11 +16,18 @@ def home():                                                        # This is the
     return render_template("home.html", title="Home Page")         # Return home.html
 
 
+######################################################### For Logging Out ###########################################################
+@app.route("/logout", methods=["POST"])
+def logout():
+    logout_user()
+    return redirect(url_for("home"))
+
 ########################################################## Login form submission ####################################################
 
 # Decorator when someone click on submit login credential button present at home.html
 @app.route("/submit_login_credit", methods=["GET", "POST"])
 def submit_login_credit():
+    
     ''' Have to think a logic so that authenticated 
         users can go to their designated place '''
     if current_user.is_authenticated:                             # If the current user is authenticated send him to boss login page
@@ -32,8 +39,38 @@ def submit_login_credit():
         
         #~~~~~~~~~~~~~~~~~~~~~ Add a drop down so that person can select that he is a boss/site engineer/supervisor ~~~~~~~~~~~~~~~~~~~~~~~~~ 
         
-        ''' Have to work on authenticating 
-            the user '''
+        '''Check the given id in all the tables
+        '''
+        try:
+            boss_user = Boss.query.filter_by(boss_id=input_id).first()
+            if input_password == boss_user.boss_password:
+                flash("Login Successful", "success")
+                return redirect(url_for("bosslogin.html", title = "Boss Login"))
+        except:
+            pass
+        
+        try:
+            site_eng_user = SiteEngineerDetails.query.filter_by(site_eng_id=input_id).first()  
+            if input_password == site_eng_user.site_eng_password:
+                flash("Login Successful", "success")
+                return redirect(url_for("siteengineerlogin.html", title = "Site Engineer Login"))
+        except:
+            pass
+            
+        
+        try:    
+            supervisor_user = SupervisorDetails.query.filter_by(supervisor_id=input_id).first()
+            if input_password == supervisor_user.supervisor_password:
+                flash("Login Successful", "success")
+                return redirect(url_for("supervisorlogin.html", title = "Supervisor Login"))
+            
+        except Exception as e:
+            pass
+            
+        
+            
+        '''By default input credentials
+        '''
         if input_id == "Boss01" and input_password == "123qwe":
             flash("Login Successful", "success")
             return render_template("bosslogin.html", title = "Boss Login")
@@ -49,6 +86,7 @@ def submit_login_credit():
         else:
             flash("Login Unsuccessful. Please check email and password", "warning")
             return render_template("home.html", title="Home")
+    flash("Wrong Input Credencials", "warning")
     return render_template("bosslogin.html", title = "Boss Login")
 
 
@@ -147,14 +185,26 @@ def update_site_engineer():
 @app.route("/submit_change_site_engineer/<string:id>", methods = ["GET","POST"])
 def submit_change_site_engineer(id):
     site_engineer = SiteEngineerDetails.query.get(id)
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print(site_engineer, id)
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print(site_engineer.site_eng_id, site_engineer.site_eng_name, site_engineer.site_eng_phone)
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!") 
+    
+    '''Update the given site engineer with the new given data'''
+    if request.form["site_eng_id"]:
+        site_engineer.site_eng_id = request.form["site_eng_id"]
+    if request.form["site_eng_name"]:
+        site_engineer.site_eng_name = request.form["site_eng_name"]
+    if request.form["site_eng_phone"]:
+        site_engineer.site_eng_phone = request.form["site_eng_phone"]
+    if request.form["location_id"]:
+        site_engineer.location_id = request.form["location_id"]
+    if request.form["site_id"]:
+        site_engineer.site_id = request.form["site_id"]
+    if request.form["project_id"]:
+        site_engineer.project_id = request.form["project_id"]
+    if request.form["site_eng_email"]:
+        site_engineer.site_eng_email = request.form["site_eng_email"]
+    if request.form["site_eng_password"]:
+        site_engineer.site_eng_password = request.form["site_eng_password"]
+    db.session.commit()
+    
     return render_template("/change_site_engineer.html", title = "Change Site Engineer")
     
 
@@ -235,6 +285,12 @@ def take_morning_attendance():
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~` Sample`
 @app.route("/submit_morning_attendance", methods = ["POST"])
 def submit_morning_attendace():
+     # If time is between 10 PM to 4 AM, delete the database
+    current_time = datetime.now().hour
+    # if current_time in [22, 23, 0, 1, 2, 3, 4]:
+    db.session.query(WorkerTodayMorningAttendance).delete()
+    db.session.commit()
+    
     present_workers = request.form.getlist("present")
     all_workers = WorkerPrimary.query.all()
     absent_workers = [x.worker_id for x in all_workers if x.worker_id not in present_workers]
@@ -276,6 +332,13 @@ def take_evening_attendance():
 ################## Work on this
 @app.route("/submit_evening_attendance", methods = ["POST"])
 def submit_evening_attendace():
+    
+    # If time is between 10 PM to 4 AM, delete the database
+    current_time = datetime.now().hour
+    # if current_time in [22, 23, 0, 1, 2, 3, 4]:
+    db.session.query(WorkerTodayEveningAttendance).delete()
+    db.session.commit()
+    
     present_workers = request.form.getlist("present")
     overtime_hour_work = request.form.getlist("overtime_hour")
     all_workers = WorkerPrimary.query.all()

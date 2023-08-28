@@ -17,6 +17,16 @@
     <title> Swastik Associates </title>
     {% endif %}
 
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <div class="message_flash">{{ message }}</div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
     <!-- Colour of every webpage will be tan by defualt -->
     <style>
         body {
