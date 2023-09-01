@@ -569,3 +569,26 @@ def view_site_engineer():
     
     return render_template("view_site_engineer.html", title = "View Site Engineer Data", 
                            site_eng_detail=site_eng_detail)
+
+@app.route("/view_workers_details", methods = ["POST"])
+def view_workers_details():
+    worker_detail = WorkerDetail.query.all()
+    return render_template("view_workers_details.html", title = "View Workers Details", 
+                           worker_detail=worker_detail)
+
+@app.route("/view_loc_site_proj", methods = ["POST"])
+def view_loc_site_proj():
+    location_data = LocationData.query.all()
+    site_data = SiteData.query.all()
+    project_data = ProjectData.query.all()
+
+    return render_template("view_loc_site_proj.html", title = "View Loc Site & Project", 
+                            location_data=location_data, site_data=site_data,
+                           project_data=project_data)
+
+@app.route("/view_supervisor", methods = ["POST"])
+def view_supervisor():
+    supervisor_detail = SupervisorDetails.query.all()
+    
+    return render_template("view_supervisor.html", title = "View Supervisor Details", 
+                           supervisor_detail=supervisor_detail)

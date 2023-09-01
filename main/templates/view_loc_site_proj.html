@@ -1,0 +1,81 @@
+<!-- For trial, can be deleted -->
+
+
+
+
+
+
+
+
+
+{% extends "layout.html" %}
+{% block head %}
+<link rel="stylesheet" href={{ url_for('static', filename='home.css') }}> 
+{% endblock head %}
+
+{% block content %}
+<h1> Location Data </h1>
+<table border=""2>
+    <tr>
+        <th>Location ID</th>
+        <th>Name</th>
+        <th>State</th>
+        <th>Number of Projects</th> 
+    </tr>
+    {% for i in location_data %}
+    <tr>
+        <td>{{i.location_id}}</td>
+        <td>{{i.location_name}}</td>
+        <td>{{i.location_state}}</td>
+        <td>{{i.location_project_number}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+<h1> Site Data</h1>
+<table border="2">
+    <tr>
+        <th>Site ID</th>
+        <th>Name</th>
+        <th>Location ID</th>
+        <th>Pincode</th>
+        <th>Number of Projects</th>
+    </tr>
+    {% for i in site_data %}
+    <tr>
+        <td>{{i.site_id}}</td>
+        <td>{{i.site_name}}</td>
+        <td>{{i.location_id}}</td>
+        <td>{{i.site_pincode}}</td>
+        <td>{{i.site_project_number}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<h1> Project Data </h1>
+<table border="2">
+    <tr>
+        <th>Project ID</th>
+        <th>Name</th>
+        <th>Site ID</th>
+        <th>Location ID</th>
+        <th>Site Engineer ID</th>
+        <th>Supervisor ID</th>
+        <th>Total Workers</th>
+    </tr>
+    {% for i in project_data %}
+    <tr>
+        <td>{{i.project_id}}</td>
+        <td>{{i.project_name}}</td>
+        <td>{{i.site_id}}</td>
+        <td>{{i.location_id}}</td>
+        <td>{{i.site_eng_id}}</td>
+        <td>{{i.supervisor_id}}</td>
+        <td>{{i.total_workers}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+<br><br><br><br><br>
+{% endblock content %}
