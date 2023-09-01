@@ -562,3 +562,10 @@ def view_all_data():
                            worker_today_morning_attendance=worker_today_morning_attendance,
                            worker_today_evening_attendance=worker_today_evening_attendance,
                            worker_attendance=worker_attendance)
+
+@app.route("/view_site_engineer", methods = ["POST"])
+def view_all_data():
+    site_eng_detail = SiteEngineerDetails.query.all()
+    
+    return render_template("view_site_engineer.html", title = "View Site Engineer Data", 
+                           site_eng_detail=site_eng_detail)
