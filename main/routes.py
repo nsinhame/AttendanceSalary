@@ -45,16 +45,17 @@ def submit_login_credit():
             boss_user = Boss.query.filter_by(boss_id=input_id).first()
             if input_password == boss_user.boss_password:
                 flash("Login Successful", "success")
-                return redirect(url_for("bosslogin.html", title = "Boss Login"))
-        except:
+                return render_template("bosslogin.html", title = "Boss Login")
+        except Exception as e:
             pass
         
         try:
             site_eng_user = SiteEngineerDetails.query.filter_by(site_eng_id=input_id).first()  
             if input_password == site_eng_user.site_eng_password:
                 flash("Login Successful", "success")
-                return redirect(url_for("siteengineerlogin.html", title = "Site Engineer Login"))
-        except:
+                return render_template("siteengineerlogin.html", title = "Site Engineer Login")
+        except Exception as e:
+            
             pass
             
         
@@ -62,7 +63,7 @@ def submit_login_credit():
             supervisor_user = SupervisorDetails.query.filter_by(supervisor_id=input_id).first()
             if input_password == supervisor_user.supervisor_password:
                 flash("Login Successful", "success")
-                return redirect(url_for("supervisorlogin.html", title = "Supervisor Login"))
+                return render_template("supervisorlogin.html", title = "Supervisor Login")
             
         except Exception as e:
             pass
@@ -84,6 +85,7 @@ def submit_login_credit():
             return render_template("siteengineerlogin.html", title = "Site Engineer Login")
         
         else:
+            print(input_id, input_password)
             flash("Login Unsuccessful. Please check email and password", "warning")
             return render_template("home.html", title="Home")
     flash("Wrong Input Credencials", "warning")
