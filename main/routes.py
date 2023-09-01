@@ -45,7 +45,7 @@ def submit_login_credit():
             boss_user = Boss.query.filter_by(boss_id=input_id).first()
             if input_password == boss_user.boss_password:
                 flash("Login Successful", "success")
-                return render_template("bosslogin.html", title = "Boss Login")
+                return render_template("bosslogin.html", title = "Boss Login", login_name = boss_user.boss_name)
         except Exception as e:
             pass
         
@@ -53,7 +53,7 @@ def submit_login_credit():
             site_eng_user = SiteEngineerDetails.query.filter_by(site_eng_id=input_id).first()  
             if input_password == site_eng_user.site_eng_password:
                 flash("Login Successful", "success")
-                return render_template("siteengineerlogin.html", title = "Site Engineer Login")
+                return render_template("siteengineerlogin.html", title = "Site Engineer Login", login_name = site_eng_user.site_eng_name)
         except Exception as e:
             
             pass
@@ -63,7 +63,7 @@ def submit_login_credit():
             supervisor_user = SupervisorDetails.query.filter_by(supervisor_id=input_id).first()
             if input_password == supervisor_user.supervisor_password:
                 flash("Login Successful", "success")
-                return render_template("supervisorlogin.html", title = "Supervisor Login")
+                return render_template("supervisorlogin.html", title = "Supervisor Login", login_name = supervisor_user.supervisor_name)
             
         except Exception as e:
             pass
@@ -74,15 +74,15 @@ def submit_login_credit():
         '''
         if input_id == "Boss01" and input_password == "123qwe":
             flash("Login Successful", "success")
-            return render_template("bosslogin.html", title = "Boss Login")
+            return render_template("bosslogin.html", title = "Boss Login", login_name = "Sample Boss")
         
         elif input_id == "Super01" and input_password == "123qwe":
             flash("Login Successful", "success")
-            return render_template("supervisorlogin.html", title = "Supervisor Login")
+            return render_template("supervisorlogin.html", title = "Supervisor Login", login_name = "Sample Supervisor")
         
         elif input_id == "Site01" and input_password == "123qwe":
             flash("Login Successful", "success")
-            return render_template("siteengineerlogin.html", title = "Site Engineer Login")
+            return render_template("siteengineerlogin.html", title = "Site Engineer Login", login_name = "Sample Site Engineer")
         
         else:
             print(input_id, input_password)

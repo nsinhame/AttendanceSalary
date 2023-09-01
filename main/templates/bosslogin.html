@@ -8,10 +8,10 @@
 
 {% block content %}
 
+<h1>Welcome, {{ login_name }}</h1><br>
 <div class = "center">
-<a href="#" class="button button-grad" size="50px">Boss Login</a>
-<br><br><br>
 
+<div class="button-container">
 <!-- Done -->
 <form method="POST" action ="/add_site_engineer">
     <input type="submit" value="Add New Site Engineer">
@@ -30,12 +30,12 @@
 </form>
 <br><br>
 
-<form method="POST" action ="/change_supervisor">
+<!-- <form method="POST" action ="/change_supervisor">
     <input type="submit" value="Change Supervisor Data">
 </form>
-<br><br>
+<br><br> -->
 
-<form method="POST" action ="/add_location_project_site">
+<!-- <form method="POST" action ="/add_location_project_site">
     <input type="submit" value="Add Location/Project/Site">
 </form>
 <br><br>
@@ -43,7 +43,7 @@
 <form method="POST" action ="/change_location_project_site">
     <input type="submit" value="Change Location/Projesct/Site">
 </form>
-<br><br>
+<br><br> -->
 
 <form method="POST" action ="/check_attendance">
     <input type="submit" value="Check Attendance">
@@ -55,9 +55,31 @@
 </form>
 <br><br> -->
 
-<form method="POST" action ="/view_all_data">
+<!-- <form method="POST" action ="/view_all_data">
     <input type="submit" value="View all sample data">
 </form>
+
+<br>
+<br> -->
+<form method="POST" action ="/view_site_engineer">
+    <input type="submit" value="View Site Engineer data">
+</form>
+<br><br>
+
+<form method="POST" action ="/view_supervisor">
+    <input type="submit" value="View Supervisor">
+</form>
+<br><br>
+
+<form method="POST" action ="/view_workers_details">
+    <input type="submit" value="View Workers">
+</form>
+<br><br>
+
+<form method="POST" action ="/view_loc_site_proj">
+    <input type="submit" value="View Location/Site/Project">
+</form>
+<br><br>
 
 <!-- Only for trial, can be deleted later -->
 <!-- <form method="POST" action ="/add_data">
@@ -65,11 +87,8 @@
 </form>
 </div> -->
 <br><br>
+</div>
 
-<form method="POST" action ="/logout">
-    <input type="submit" value="Logout">
-</form>
-<br><br>
 
 
 {% endblock content %}

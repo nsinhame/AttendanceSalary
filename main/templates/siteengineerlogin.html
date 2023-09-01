@@ -6,41 +6,45 @@
 {% endblock head %}
 
 {% block content %}
+
+<h1>Welcome, {{ login_name }}</h1>
+<br>
 <div class = "center">
-<a href="#" class="button button-grad" size="50px">Boss Login</a>
-<br><br><br>
 
+    <div class="button-container">
+        <form method="POST" action ="/take_morning_attendance">
+            <input type="submit" value="Take Morning Attendance">
+        </form>
+            <br><br>
 
-<form method="POST" action ="/take_morning_attendance">
-    <input type="submit" value="Take Morning Attendance">
-</form>
-<br><br>
+        <form method="POST" action ="/take_evening_attendance">
+            <input type="submit" value="Take Evening Attendance">
+        </form>
+            <br><br>
+    
 
-<form method="POST" action ="/take_evening_attendance">
-    <input type="submit" value="Take Evening Attendance">
-</form>
-<br><br>
 
 <form method="POST" action ="/add_full_day_attendance">
     <input type="submit" value="Add Full Day Attendance">
 </form>
 <br><br>
 
-
-<form method="POST" action ="/edit_attendance">
+<!-- <form method="POST" action ="/edit_attendance">
     <input type="submit" value="Edit Attendance">
 </form>
-<br><br>
+<br><br> -->
 
 <form method="POST" action ="/view_attendance">
     <input type="submit" value="View Attendance">
 </form>
+</div>
+
 <br><br>
 
-<form method="POST" action ="/logout">
+<!-- <form method="POST" action ="/logout">
     <input type="submit" value="Logout">
 </form>
-<br><br>
+<br><br> -->
 
 </div>
 

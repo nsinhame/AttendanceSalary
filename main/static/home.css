@@ -24,3 +24,22 @@
   top: 10px; /* Adjust this value to set the button's distance from the top */
   right: 10px; /* Adjust this value to set the button's distance from the right */
 }
+
+/* Left and right container */
+.left-side, .right-side {
+  flex-basis: 50%;
+}
+
+
+
+.button-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px; /* Adjust the gap between buttons as needed */
+  width: 80%; /* Adjust the width as needed */
+  margin: 0 auto; /* Center the container */
+}
+
+.button {
+  width: 100%;
+}
