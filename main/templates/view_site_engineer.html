@@ -1,0 +1,45 @@
+<!-- For trial, can be deleted -->
+
+
+
+
+
+
+
+
+
+{% extends "layout.html" %}
+{% block head %}
+<link rel="stylesheet" href={{ url_for('static', filename='home.css') }}> 
+{% endblock head %}
+
+{% block content %}
+
+<h1> Site Engineer Data </h1>
+<table border ="2">
+    <tr>
+        <th>Site Engineer ID</th>
+        <th>Name</th>
+        <th>Phone Number</th>
+        <th>Location ID</th>
+        <th>Site ID</th>
+        <th>Project ID</th>
+        <th>Email</th>
+        <th>Password</th>
+    </tr>
+    {% for i in site_eng_detail %}
+    <tr>
+        <td>{{i.site_eng_id}}</td>
+        <td>{{i.site_eng_name}}</td>
+        <td>{{i.site_eng_phone}}</td>
+        <td>{{i.location_id}}</td>
+        <td>{{i.site_id}}</td>
+        <td>{{i.project_id}}</td>
+        <td>{{i.site_eng_email}}</td>
+        <td>{{i.site_eng_password}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+<br><br><br><br><br>
+{% endblock content %}
