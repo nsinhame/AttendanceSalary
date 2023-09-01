@@ -564,7 +564,7 @@ def view_all_data():
                            worker_attendance=worker_attendance)
 
 @app.route("/view_site_engineer", methods = ["POST"])
-def view_all_data():
+def view_site_engineer():
     site_eng_detail = SiteEngineerDetails.query.all()
     
     return render_template("view_site_engineer.html", title = "View Site Engineer Data", 
