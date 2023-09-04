@@ -1,0 +1,29 @@
+<!-- Search the worker and select the particular worker to change -->
+
+{% extends "layout.html" %}
+{% block content %}
+<p>Change Worker</p><br>
+<form method="POST" action="/search_worker">
+    <!-- <label for="option_worker">Search a Worker by: </label>
+        <select title= "option_worker" name="option_worker" id="option_worker">
+            <option value="worker_id">ID</option>  
+            <option value="worker_name">Name</option>
+            <option value="site_id">Site ID</option>
+        </select> -->
+
+        <label for="option_worker">Search a Worker by ID: </label>
+    <br><br>
+    <label for="search_attribute_worker">Enter the above selected attribute: </label>
+    <input type="text" name="search_attribute_worker" id="search_attribute_worker"><br><br>
+    <br>
+
+    <input type="submit" value="Submit">
+
+</form>
+
+
+<br><br>
+<button onclick="goBack()">Go Back</button>
+<br><br>
+
+{% endblock content %}

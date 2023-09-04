@@ -140,8 +140,6 @@ def submit_new_site_engineer():
         
 
     ## Add data into the table
-    print(site_eng_id, site_eng_name, site_eng_phone, 
-          location_id, site_id, project_id, site_eng_email, site_eng_password)
     return render_template("add_site_engineer.html", title = "Add Site Engineer")
 
 
@@ -186,7 +184,14 @@ def update_site_engineer():
 # Need Working on this. IDs are accepted but name and site id gives error
 @app.route("/submit_change_site_engineer/<string:id>", methods = ["GET","POST"])
 def submit_change_site_engineer(id):
-    site_engineer = SiteEngineerDetails.query.get(id)
+    try:
+        site_engineer = SiteEngineerDetails.query.filter_by(site_eng_id=id).first()
+    except:
+        try:
+            site_engineer = SiteEngineerDetails.query.filter_by(site_eng_name=id).first()
+        except:
+            site_engineer = SiteEngineerDetails.query.filter_by(site_id=id).first()
+    
     
     '''Update the given site engineer with the new given data'''
     if request.form["site_eng_id"]:
@@ -256,6 +261,86 @@ def submit_new_worker():
     except Exception as e:
         flash(f"Got an error: {e}", "warning")
         return render_template("add_worker.html", title="Add Worker")
+    
+# This decorator is to change the data of the worker
+@app.route("/change_worker", methods=["POST"])
+def change_worker():                                                                 # Return the webpage where we can change the data of worker
+    return render_template("change_worker.html", title="Change Worker") 
+
+# Route to the webpage where we can search the worker. It is available at change_worker.html
+@app.route("/search_worker", methods = ["POST"])                                     
+def search_worker():                                                                
+    option_worker = request.form["option_worker"]                            
+    search_attribute_worker = request.form["search_attribute_worker"]
+    
+    if option_worker == "worker_id":
+        selected_worker = WorkerDetail.query.filter_by(worker_id = search_attribute_worker).first()       
+        attribute_worker = "ID"                    # This is used to tell which attribute is used to search the worker
+                                                                                           
+    if option_worker == "worker_name":
+        selected_worker = WorkerDetail.query.filter_by(worker_name = search_attribute_worker).first()             
+        attribute_worker = "Name"                    # This is used to tell which attribute is used to search the worker
+    
+    if option_worker == "site_id":
+        selected_worker = SiteEngineerDetails.query.filter_by(site_id = search_attribute_worker).first()                  
+        attribute_worker = "Site ID"                    # This is used to tell which attribute is used to search the worker
+    
+    # Add searching query                                                               
+    return render_template("update_worker.html", title="Update Worker", selected_worker=selected_worker, option_worker=option_worker,
+                           attribute_worker=attribute_worker, search_attribute_worker=search_attribute_worker)          
+    
+@app.route("/update_worker", methods = ["POST"])
+def update_worker():
+    return render_template("update_worker.html", title = "Update Worker")
+
+
+# Change the workers details
+@app.route("/submit_change_worker/<string:id>", methods = ["GET","POST"])
+def submit_change_worker(id):
+    try:
+        worker = WorkerDetail.query.filter_by(worker_id=id).first()
+        print(worker.worker_id)
+    except:
+        try:
+            worker = WorkerDetail.query.filter_by(worker_name=id).first()
+        except:
+            worker = WorkerDetail.query.filter_by(site_id=id).first()
+    
+    '''Update the given worker with the new given data'''
+    if request.form["worker_id"]:
+        worker.worker_id = request.form["worker_id"]
+    if request.form["worker_name"]:
+        worker.worker_name = request.form["worker_name"]
+    if request.form["worker_phone_number"]:
+        worker.worker_phone_number = request.form["worker_phone_number"]
+    if request.form["worker_address"]:
+        worker.worker_address = request.form["worker_address"]
+    if request.form["worker_gender"]:
+        worker.worker_gender = request.form["worker_gender"]
+    if request.form["worker_aadhar_number"]:
+        worker.worker_aadhar_number = request.form["worker_aadhar_number"]
+    if request.form["worker_account_number"]:
+        worker.worker_account_number = request.form["worker_account_number"]
+    if request.form["worker_ifsc_code"]:
+        worker.worker_ifsc_code = request.form["worker_ifsc_code"]
+    if request.form["worker_bank_name"]:
+        worker.worker_bank_name = request.form["worker_bank_name"]
+    if request.form["worker_bank_branch_name"]:
+        worker.worker_bank_branch_name = request.form["worker_bank_branch_name"]
+    if request.form["worker_join_date"]:
+        worker.worker_join_date = datetime.strptime(request.form['worker_join_date'], '%Y-%m-%d')
+    if request.form["worker_salary"]:
+        worker.worker_salary = request.form["worker_salary"]
+    if request.form["supervisor_id"]:
+        worker.supervisor_id = request.form["supervisor_id"]
+    if request.form["site_id"]:
+        worker.site_id = request.form["site_id"]
+    if request.form["still_working"]:
+        worker.still_working = request.form["still_working"]
+    
+    db.session.commit()
+    
+    return render_template("/change_worker.html", title = "Change Worker")
     
 
 
