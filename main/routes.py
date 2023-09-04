@@ -211,10 +211,52 @@ def submit_change_site_engineer(id):
     
 
 
+# ############################################  Adding/updating Worker ##########################################33
 
+@app.route("/add_worker", methods=["POST"])
+def add_worker():
+    return render_template("add_worker.html", title="Add Worker")
 
-
-
+# Add new data for the worker
+@app.route("/submit_new_worker", methods = ["POST"])
+def submit_new_worker():
+    worker_id = request.form["worker_id"]
+    worker_name = request.form["worker_name"]
+    worker_phone_number = request.form["worker_phone_number"]
+    worker_address = request.form["worker_address"]
+    worker_gender = request.form["worker_gender"]
+    worker_aadhar_number = request.form["worker_aadhar_number"]
+    # Bank Details
+    worker_account_number = request.form["worker_account_number"]
+    worker_ifsc_code = request.form["worker_ifsc_code"]
+    worker_bank_name = request.form["worker_bank_name"]
+    worker_bank_branch_name = request.form["worker_bank_branch_name"]
+    # Bank Details End
+    worker_join_date = datetime.strptime(request.form['worker_join_date'], '%Y-%m-%d')
+    worker_salary = request.form["worker_salary"]
+    supervisor_id = request.form["supervisor_id"]
+    site_id = request.form["site_id"]
+    still_working = request.form["still_working"]
+    
+    try:
+        worker_data = WorkerDetail(worker_id=worker_id, worker_name=worker_name,
+                                   worker_phone_number=worker_phone_number,
+                                   worker_address=worker_address, worker_gender=worker_gender,
+                                   worker_aadhar_number=worker_aadhar_number, 
+                                   worker_account_number=worker_account_number, 
+                                   worker_ifsc_code=worker_ifsc_code, worker_bank_name=worker_bank_name,
+                                   worker_bank_branch_name=worker_bank_branch_name, worker_join_date=worker_join_date,
+                                   worker_salary=worker_salary, supervisor_id=supervisor_id,
+                                   site_id=site_id, still_working=still_working)
+        
+        db.session.add(worker_data)
+        db.session.commit()
+        return render_template("add_worker.html", title="Add Worker")
+    
+    except Exception as e:
+        flash(f"Got an error: {e}", "warning")
+        return render_template("add_worker.html", title="Add Worker")
+    
 
 
 

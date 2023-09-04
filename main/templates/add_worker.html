@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- Heading of the webpage -->
+<a href="#" class="button button-grad" size="50px">Add Worker</a>
+<br><br><br>
+
+
+<!-- Start of HTML form to get data of new order -->
+<form method="POST" action ="/submit_new_worker">
+
+    <!-- Get ID of the Worker -->
+    <label for="worker_id">Worker ID: </label>
+    <input type="text" name="worker_id" id="worker_id"><br><br>
+
+    <!-- Get name of the Worker -->
+    <label for="worker_name">Name: </label>
+    <input type="text" name="worker_name" id="worker_name"><br><br>
+    
+    <!-- Get phone number of the worker -->
+    <label for="worker_phone_number ">Phone Number: </label>
+    <input type="text" name="worker_phone_number" id="worker_phone_number"><br><br>
+
+    <!-- Get address of the worker -->
+    <label for="worker_address">Address: </label>
+    <input type="text" name="worker_address" id="worker_address"><br><br>
+
+    <!-- Get Gender of the worker -->
+    <label for="worker_gender">Gender: </label>
+    <input type="text" name="worker_gender" id="worker_gender"><br><br>
+
+    <!-- Get aadhar number of the worker -->
+    <label for="worker_aadhar_number">Aadhar Number: </label>
+    <input type="text" name="worker_aadhar_number" id="worker_aadhar_number"><br><br>
+
+
+    <!-- Bank Details -->
+    
+    <label for="worker_account_number">Account Number: </label>
+    <input type="text" name="worker_account_number" id="worker_account_number"><br><br>
+    
+    
+    <label for="worker_ifsc_code">IFSC Code: </label>
+    <input type="text" name="worker_ifsc_code" id="worker_ifsc_code"><br><br>
+    
+    
+    <label for="worker_bank_name">Bank Name: </label>
+    <input type="text" name="worker_bank_name" id="worker_bank_name"><br><br>
+
+    
+    <label for="worker_bank_branch_name">Branch Name: </label>
+    <input type="text" name="worker_bank_branch_name" id="worker_bank_branch_name"><br><br>
+    
+    
+    <label for="worker_join_date">Joining Date: </label>
+    <input type="date" name="worker_join_date" id="worker_join_date"><br><br>
+
+    <label for="worker_salary">Per day Salary: </label>
+    <input type="text" name="worker_salary" id="worker_salary"><br><br>
+
+    <label for="supervisor_id">Supervisor ID: </label>
+    <input type="text" name="supervisor_id" id="supervisor_id"><br><br>
+
+    <label for="site_id">Site ID: </label>
+    <input type="text" name="site_id" id="site_id"><br><br>
+
+    <label for="still_working">Still Working: </label>
+    <input type="text" name="still_working" id="still_working"><br><br>
+
+    <!-- Submit the data -->
+    <input type="submit" value="Submit">
+</form>
+<!-- End of the form -->
+<br><br>
+<button onclick="goBack()">Go Back</button>
+
+{% endblock content %}

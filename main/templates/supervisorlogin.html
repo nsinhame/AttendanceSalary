@@ -14,7 +14,23 @@
 
 <div class="button-container">
 <form method="POST" action ="/take_morning_attendance">
-    <input type="submit" value="Take Attendance">
+    <input type="submit" value="Take Morning Attendance">
+</form>
+<br><br>
+<form method="POST" action ="/take_evening_attendance">
+    <input type="submit" value="Take Evening Attendance">
+</form>
+    <br><br>
+
+
+
+<form method="POST" action ="/add_full_day_attendance">
+<input type="submit" value="Add Full Day Attendance">
+</form>
+<br><br>
+
+<form method="POST" action ="/add_worker">
+    <input type="submit" value="Add New Worker">
 </form>
 <br><br>
 
@@ -30,4 +46,7 @@
 </div>
 </div>
 
+<br><br>
+<button onclick="goBack()">Go Back</button>
+<br><br>
 {% endblock content %}
