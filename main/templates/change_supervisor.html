@@ -1,9 +1,28 @@
+<!-- Search the site engineer and select the particular site engineer to change -->
+
 {% extends "layout.html" %}
 {% block content %}
-<p>change supervisor</p>
+<p>Change Supervisor</p><br>
+<form method="POST" action="/search_supervisor">
+    <!-- <label for="option_site_engineer">Search a Site Engineer by: </label>
+        <select title= "option_site_engineer" name="option_site_engineer" id="option_site_engineer">
+            <option value="site_eng_id">ID</option>  
+            <option value="site_eng_name">Name</option>
+            <option value="site_id">Site ID</option>
+        </select> -->
+        <label for="option_supervisor">Search a Supervisor by ID: </label>
+    <br><br>
+    <label for="search_attribute_supervisor">Enter the above selected attribute: </label>
+    <input type="text" name="search_attribute_supervisor" id="search_attribute_supervisor"><br><br>
+    <br>
+
+    <input type="submit" value="Submit">
+
+</form>
 
 
 <br><br>
 <button onclick="goBack()">Go Back</button>
 <br><br>
+
 {% endblock content %}

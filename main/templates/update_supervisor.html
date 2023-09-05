@@ -1,11 +1,20 @@
+<!-- Have to work on this -->
+
+
+
+
 {% extends "layout.html" %}
 {% block content %}
+
 <!-- Heading of the webpage -->
-<a href="#" class="button button-grad" size="50px">Add Supervisor</a>
+<h1><a href="#" class="button button-grad" size="50px">Update Supervisor</a></h1>
+<h1> Supervisor's {{ attribute_supervisor }}: {{ search_attribute_supervisor }}</h1>
+<br>
 <br><br><br>
 
+
 <!-- Start of HTML form to get data of new order -->
-<form method="POST" action ="/submit_new_supervisor">
+<form method="POST" action ="/submit_change_supervisor/{{ search_attribute_supervisor }}">
 
     <!-- Get ID of the Supervisor -->
     <label for="supervisor_id">Supervisor ID: </label>
@@ -39,7 +48,7 @@
     <label for="supervisor_password">Password: </label>
     <input type="password" name="supervisor_password" id="supervisor_password"><br><br>
 
-    <!-- Get ID of the Site Engineer Working under this Supervisor -->
+    <!-- Get ID of the Site Engineer working under Supervisor -->
     <label for="site_eng_id">Site Engineer ID: </label>
     <input type="text" name="site_eng_id" id="site_eng_id"><br><br>
 
@@ -48,9 +57,9 @@
 </form>
 <!-- End of the form -->
 
-<br><br>
 
 <br><br>
 <button onclick="goBack()">Go Back</button>
 <br><br>
+
 {% endblock content %}

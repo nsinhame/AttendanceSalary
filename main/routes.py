@@ -155,7 +155,8 @@ def change_site_engineer():                                                     
 # Route to the webpage where we can search the site engineer. It is available at change_site_engineer.html
 @app.route("/search_site_engineer", methods = ["POST"])                                     
 def search_site_engineer():                                                                
-    option_site_engineer = request.form["option_site_engineer"]                            
+    # option_site_engineer = request.form["option_site_engineer"]
+    option_site_engineer = "site_eng_id"                            
     search_attribute_site_eng = request.form["search_attribute_site_eng"]
     
     if option_site_engineer == "site_eng_id":
@@ -270,7 +271,8 @@ def change_worker():                                                            
 # Route to the webpage where we can search the worker. It is available at change_worker.html
 @app.route("/search_worker", methods = ["POST"])                                     
 def search_worker():                                                                
-    option_worker = request.form["option_worker"]                            
+    # option_worker = request.form["option_worker"]
+    option_worker = "worker_id"                            
     search_attribute_worker = request.form["search_attribute_worker"]
     
     if option_worker == "worker_id":
@@ -344,6 +346,7 @@ def submit_change_worker(id):
     
 
 
+# ############################################  Adding/updating Supervisor ##########################################33
 
 
 
@@ -353,10 +356,107 @@ def add_supervisor():                                                           
     return render_template("add_supervisor.html", title="Add Supervisor") 
 
 
+@app.route("/submit_new_supervisor", methods=["POST"])
+def submit_new_supervisor():
+    supervisor_id = request.form["supervisor_id"]
+    supervisor_name = request.form["supervisor_name"]
+    supervisor_phone = request.form["supervisor_phone"]
+    location_id = request.form["location_id"]
+    site_id = request.form["site_id"]
+    project_id = request.form["project_id"]
+    supervisor_email = request.form["supervisor_email"]
+    supervisor_password = request.form["supervisor_password"]
+    site_eng_id = request.form["site_eng_id"]
+    
+    try:
+        supervisor_data = SupervisorDetails(supervisor_id=supervisor_id,
+                                            supervisor_name=supervisor_name,
+                                            supervisor_phone=supervisor_phone,
+                                            location_id=location_id,
+                                            site_id=site_id,project_id=project_id,
+                                            supervisor_email=supervisor_email,
+                                            supervisor_password=supervisor_password,
+                                            site_eng_id=site_eng_id)
+        
+        db.session.add(supervisor_data)
+        db.session.commit()
+        
+    except Exception as e:
+        flash(f"Got an error: {e}", "warning")
+        return render_template("add_supervisor.html", title="Add Supervisor")
+    
+    return render_template("add_supervisor.html", title="Add Supervisor")
+
+
 # This is a decorator to change the data of supervisor. Its function call is present in bosslogin.html. 
 @app.route("/change_supervisor", methods=["POST"])
 def change_supervisor():                                                                   # Return the webpage where we can change the data of supervisor
     return render_template("change_supervisor.html", title="Change Supervisor") 
+
+
+@app.route("/search_supervisor", methods = ["POST"])                                     
+def search_supervisor():                                                                
+    # option_supervisor = request.form["option_supervisor"]
+    option_supervisor = "supervisor_id"                            
+    search_attribute_supervisor = request.form["search_attribute_supervisor"]
+    
+    if option_supervisor == "supervisor_id":
+        selected_supervisor = SupervisorDetails.query.filter_by(supervisor_id = search_attribute_supervisor).first()       
+        attribute_supervisor = "ID"                    # This is used to tell which attribute is used to search the supervisor           
+                                                                                           
+    if option_supervisor == "supervisor_name":
+        selected_supervisor = SupervisorDetails.query.filter_by(supervisor_name = search_attribute_supervisor).first()             
+        attribute_site_engineer = "Name"                    # This is used to tell which attribute is used to search the supervisor     
+    
+    if option_supervisor == "site_id":
+        selected_supervisor = SupervisorDetails.query.filter_by(site_id = search_attribute_supervisor).first()                  
+        attribute_site_engineer = "Site ID"                    # This is used to tell which attribute is used to search the supervisor
+    
+    # Add searching query                                                               
+    return render_template("update_supervisor.html", title="Update Supervisor", selected_supervisor=selected_supervisor, option_supervisor=option_supervisor,
+                           attribute_supervisor=attribute_supervisor, search_attribute_supervisor=search_attribute_supervisor)          
+    # return render_template("under_maintainance.html", title = "Under Maintainance")        
+
+
+@app.route("/update_supervisor", methods = ["POST"])
+def update_supervisor():
+    return render_template("update_supervisor.html", title = "Update Supervisor")
+
+@app.route("/submit_change_supervisor/<string:id>", methods = ["GET","POST"])
+def submit_change_supervisor(id):
+    try:
+        supervisor = SupervisorDetails.query.filter_by(supervisor_id=id).first()
+    except:
+        try:
+            supervisor = SupervisorDetails.query.filter_by(supervisor_name=id).first()
+        except:
+            supervisor = SupervisorDetails.query.filter_by(site_id=id).first()
+    
+    
+    '''Update the given site engineer with the new given data'''
+    if request.form["supervisor_id"]:
+        supervisor.supervisor_id = request.form["supervisor_id"]
+    if request.form["supervisor_name"]:
+        supervisor.supervisor_name = request.form["supervisor_name"]
+    if request.form["supervisor_phone"]:
+        supervisor.supervisor_phone = request.form["supervisor_phone"]
+    if request.form["location_id"]:
+        supervisor.location_id = request.form["location_id"]
+    if request.form["site_id"]:
+        supervisor.site_id = request.form["site_id"]
+    if request.form["project_id"]:
+        supervisor.project_id = request.form["project_id"]
+    if request.form["supervisor_email"]:
+        supervisor.supervisor_email = request.form["supervisor_email"]
+    if request.form["supervisor_password"]:
+        supervisor.supervisor_password = request.form["supervisor_password"]
+    if request.form["site_eng_id"]:
+        supervisor.site_eng_id = request.form["site_eng_id"]
+    db.session.commit()
+    
+    return render_template("/change_supervisor.html", title = "Change Supervisor")
+    
+
 
 
 # This is a decorator to add a new location or project or site. Its function call is present in bosslogin.html. 
@@ -524,7 +624,7 @@ def add_full_day_attendance():
         attendance = WorkerAttendance(row_id = random.randint(1, 1000),
                                       worker_id = i.worker_id,
                                       attendance_date = i.attendance_date,
-                                      attendance_month = "August",
+                                      attendance_month = str(calendar.month_name[date.today().month]),
                                       attendance_year = "2023",
                                       overtime_hours = i.overtime_today,
                                       attendance_status = finalize_attendance(i.worker_id))
