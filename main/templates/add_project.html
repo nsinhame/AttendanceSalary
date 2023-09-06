@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- Heading of the webpage -->
+<a href="#" class="button button-grad" size="50px">Add Project</a>
+<br><br><br>
+
+<!-- Start of HTML form to get data of new project -->
+<form method="POST" action ="/submit_new_project">
+
+    <!-- Get ID of the Project -->
+    <label for="project_id">Project ID: </label>
+    <input type="text" name="project_id" id="project_id"><br><br>
+
+    <!-- Get name of the Project -->
+    <label for="project_name">Name: </label>
+    <input type="text" name="project_name" id="project_name"><br><br>
+    
+    <!-- Get site ID of the project -->
+    <label for="site_id">Site ID: </label>
+    <input type="text" name="site_id" id="site_id"><br><br>
+
+    <!-- Get ID of the Location -->
+    <label for="location_id">Location ID: </label>
+    <input type="text" name="location_id" id="location_id"><br><br>
+
+    <!-- Get ID of the site engineer working on that project -->
+    <label for="site_eng_id">Site Engineer ID: </label>
+    <input type="text" name="site_eng_id" id="site_eng_id"><br><br>
+    
+    <!-- Get ID of the supervisor working on that project -->
+    <label for="supervisor_id">Supervisor ID: </label>
+    <input type="text" name="supervisor_id" id="supervisor_id"><br><br>
+    
+    <!-- Total Workers working on that project -->
+    <label for="total_workers">Total Workers Working: </label>
+    <input type="text" name="total_workers" id="total_workers"><br><br>
+    
+    
+    <!-- Submit the data -->
+    <input type="submit" value="Submit">
+</form>
+<!-- End of the form -->
+
+<br><br>
+
+<br><br>
+<button onclick="goBack()">Go Back</button>
+<br><br>
+{% endblock content %}

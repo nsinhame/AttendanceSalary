@@ -1,0 +1,22 @@
+<!-- Search the site engineer and select the particular site engineer to change -->
+
+{% extends "layout.html" %}
+{% block content %}
+<p>Change Project</p><br>
+<form method="POST" action="/search_project">
+        <label for="option_project">Search a Project by ID: </label>
+    <br><br>
+    <label for="search_attribute_project">Enter the above selected attribute: </label>
+    <input type="text" name="search_attribute_project" id="search_attribute_project"><br><br>
+    <br>
+
+    <input type="submit" value="Submit">
+
+</form>
+
+
+<br><br>
+<button onclick="goBack()">Go Back</button>
+<br><br>
+
+{% endblock content %}

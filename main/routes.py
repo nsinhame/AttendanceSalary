@@ -459,6 +459,8 @@ def submit_change_supervisor(id):
 
 
 ###################################### Add/Update Location ##########################################################
+
+
 # This is a decorator to add a new location. Its function call is present in bosslogin.html. 
 @app.route("/add_location", methods=["POST"])
 def add_location():                                                           # Return the webpage where we can add a new location 
@@ -522,6 +524,89 @@ def submit_change_location(id):
     db.session.commit()
     
     return render_template("/change_location.html", title="Change Location")
+
+
+
+############################################## Add/Update Project #########################################
+
+
+# This is a decorator to add a new project. Its function call is present in bosslogin.html. 
+@app.route("/add_project", methods=["POST"])
+def add_project():                                                           # Return the webpage where we can add a new location 
+    return render_template("add_project.html", title="Add Project") 
+
+
+@app.route("/submit_new_project", methods = ["POST"])
+def submit_new_project():
+    project_id = request.form["project_id"]
+    project_name = request.form["project_name"]
+    site_id = request.form["site_id"]
+    location_id = request.form["location_id"]
+    site_eng_id = request.form["site_eng_id"]
+    supervisor_id = request.form["supervisor_id"]
+    total_workers = request.form["total_workers"]
+    
+    try:
+        project_data = ProjectData(project_id=project_id,project_name=project_name,
+                                   site_id=site_id,location_id=location_id,
+                                     site_eng_id=site_eng_id,
+                                     supervisor_id=supervisor_id,total_workers=total_workers)
+        
+        db.session.add(project_data)
+        db.session.commit()
+        
+    except Exception as e:
+        flash(f"Got an error: {e}", "warning")
+        return render_template("add_project.html", title="Add Project")
+    
+    return render_template("add_project.html", title="Add Project")
+
+# This is a decorator to change the data of project. Its function call is present in bosslogin.html. 
+@app.route("/change_project", methods=["POST"])
+def change_project():                                                        # Return the webpage where we can change the data of location 
+    return render_template("change_project.html", title="Change Project") 
+
+
+@app.route("/search_project", methods=["POST"])
+def search_project():
+    option_project = "project_id"
+    search_attribute_project = request.form["search_attribute_project"]
+    
+    selected_project = ProjectData.query.filter_by(project_id = search_attribute_project).first()
+    
+    return render_template("update_project.html", title = "Update Project", option_project=option_project,search_attribute_project=search_attribute_project,
+                           selected_project=selected_project)
+    
+@app.route("/update_project", methods=["POST"])
+def update_project():
+    return render_template("update_project.html", title="Update Project")
+
+
+@app.route("/submit_change_project/<string:id>", methods=["GET", "POST"])
+def submit_change_project(id):
+    project = ProjectData.query.filter_by(project_id=id).first()
+    
+    if request.form["project_id"]:
+        project.project_id = request.form['project_id']
+    if request.form["project_name"]:
+        project.project_name = request.form['project_name']
+    if request.form["site_id"]:
+        project.site_id = request.form['project_id']
+    if request.form["location_id"]:
+        project.location_id = request.form['location_id']
+    if request.form["site_eng_id"]:
+        project.site_eng_id = request.form['site_eng_id']
+    if request.form["supervisor_id"]:
+        project.supervisor_id = request.form['supervisor_id']
+    if request.form["total_workers"]:
+        project.total_workers = request.form['total_workers']
+    db.session.commit()
+    
+    return render_template("/change_project.html", title="Change Project")
+
+
+
+
 
 
 
