@@ -1,0 +1,23 @@
+<!-- Search the boss and select the particular boss to change -->
+
+{% extends "layout.html" %}
+{% block content %}
+<p>Change Boss</p><br>
+<form method="POST" action="/search_boss">
+
+        <label for="option_boss">Search a Boss by ID: </label>
+    <br><br>
+    <label for="search_attribute_boss">Enter the above selected attribute: </label>
+    <input type="text" name="search_attribute_boss" id="search_attribute_boss"><br><br>
+    <br>
+
+    <input type="submit" value="Submit">
+
+</form>
+
+
+<br><br>
+<button onclick="goBack()">Go Back</button>
+<br><br>
+
+{% endblock content %}

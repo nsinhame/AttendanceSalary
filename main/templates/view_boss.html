@@ -1,0 +1,36 @@
+<!-- For trial, can be deleted -->
+
+
+
+
+{% extends "layout.html" %}
+{% block head %}
+<link rel="stylesheet" href={{ url_for('static', filename='home.css') }}> 
+{% endblock head %}
+
+{% block content %}
+<h1> Boss Data </h1>
+<table border=""2>
+    <tr>
+        <th>Boss ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Password</th> 
+    </tr>
+    {% for i in boss_detail %}
+    <tr>
+        <td>{{i.boss_id}}</td>
+        <td>{{i.boss_name}}</td>
+        <td>{{i.boss_email}}</td>
+        <td>{{i.boss_password}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+
+
+<br><br>
+<button onclick="goBack()">Go Back</button>
+<br><br>
+<br><br><br><br><br>
+{% endblock content %}

@@ -458,6 +458,76 @@ def submit_change_supervisor(id):
     
 
 
+###################################### Add/Update Boss ##########################################################
+
+
+# This is a decorator to add a new boss. Its function call is present in bosslogin.html. 
+@app.route("/add_boss", methods=["POST"])
+def add_boss():                                                           # Return the webpage where we can add a new location 
+    return render_template("add_boss.html", title="Add Boss") 
+
+
+@app.route("/submit_new_boss", methods = ["POST"])
+def submit_new_boss():
+    boss_id = request.form["boss_id"]
+    boss_name = request.form["boss_name"]
+    boss_email = request.form["boss_email"]
+    boss_password = request.form["boss_password"]
+    
+    try:
+        boss_data = Boss(boss_id=boss_id,boss_name=boss_name,
+                         boss_email=boss_email,boss_password=boss_password)
+        
+        db.session.add(boss_data)
+        db.session.commit()
+        
+    except Exception as e:
+        flash(f"Got an error: {e}", "warning")
+        return render_template("add_boss.html", title="Add Boss")
+    
+    return render_template("add_boss.html", title="Add Boss")
+
+# This is a decorator to change the data of boss. Its function call is present in bosslogin.html. 
+@app.route("/change_boss", methods=["POST"])
+def change_boss():                                                        # Return the webpage where we can change the data of boss
+    return render_template("change_boss.html", title="Change Boss") 
+
+
+@app.route("/search_boss", methods=["POST"])
+def search_boss():
+    option_boss = "boss_id"
+    search_attribute_boss = request.form["search_attribute_boss"]
+    
+    selected_boss = Boss.query.filter_by(boss_id = search_attribute_boss).first()
+    
+    return render_template("update_boss.html", title = "Update Boss", option_boss=option_boss,search_attribute_boss=search_attribute_boss,
+                           selected_boss=selected_boss)
+    
+@app.route("/update_boss", methods=["POST"])
+def update_boss():
+    return render_template("update_boss.html", title="Update Boss")
+
+
+@app.route("/submit_change_boss/<string:id>", methods=["GET", "POST"])
+def submit_change_boss(id):
+    boss = Boss.query.filter_by(boss_id=id).first()
+    
+    if request.form["boss_id"]:
+        boss.boss_id = request.form['boss_id']
+    if request.form["boss_name"]:
+        boss.boss_name = request.form['boss_name']
+    if request.form["boss_email"]:
+        boss.boss_email = request.form['boss_email']
+    if request.form["boss_password"]:
+        boss.boss_password = request.form['boss_password']
+    db.session.commit()
+    
+    return render_template("/change_boss.html", title="Change Boss")
+
+
+
+
+
 ###################################### Add/Update Location ##########################################################
 
 
@@ -1044,3 +1114,11 @@ def view_supervisor():
     
     return render_template("view_supervisor.html", title = "View Supervisor Details", 
                            supervisor_detail=supervisor_detail)
+
+
+@app.route("/view_boss", methods = ["POST"])
+def view_boss():
+    boss_detail = Boss.query.all()
+    
+    return render_template("view_boss.html", title = "View Boss Details", 
+                           boss_detail=boss_detail)

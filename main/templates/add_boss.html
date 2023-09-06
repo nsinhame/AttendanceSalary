@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- Heading of the webpage -->
+<a href="#" class="button button-grad" size="50px">Add Boss</a>
+<br><br><br>
+
+<!-- Start of HTML form to get data of new boss -->
+<form method="POST" action ="/submit_new_boss">
+
+    <!-- Get ID of the boss -->
+    <label for="boss_id">Boss ID: </label>
+    <input type="text" name="boss_id" id="boss_id"><br><br>
+
+    <!-- Get name of the boss -->
+    <label for="boss_name">Name: </label>
+    <input type="text" name="boss_name" id="boss_name"><br><br>
+    
+    <!-- Get Email of the Boss -->
+    <label for="boss_email">Email: </label>
+    <input type="email" name="boss_email" id="boss_email"><br><br>
+
+    <!-- Get Password of the Boss -->
+    <label for="boss_password">Password: </label>
+    <input type="password" name="boss_password" id="boss_password"><br><br>
+    
+
+    <!-- Submit the data -->
+    <input type="submit" value="Submit">
+</form>
+<!-- End of the form -->
+
+<br><br>
+
+<br><br>
+<button onclick="goBack()">Go Back</button>
+<br><br>
+{% endblock content %}
