@@ -12,19 +12,19 @@
 <div class = "center">
 
     <div class="button-container">
-        <form method="POST" action ="/take_morning_attendance">
+        <form method="POST" action ="/take_morning_attendance/{{ login_site_id }}">
             <input type="submit" value="Take Morning Attendance">
         </form>
             <br><br>
 
-        <form method="POST" action ="/take_evening_attendance">
+        <form method="POST" action ="/take_evening_attendance/{{ login_site_id }}">
             <input type="submit" value="Take Evening Attendance">
         </form>
             <br><br>
     
 
 
-<form method="POST" action ="/add_full_day_attendance">
+<form method="POST" action ="/add_full_day_attendance/{{ login_site_id }}">
     <input type="submit" value="Add Full Day Attendance">
 </form>
 <br><br>

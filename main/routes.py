@@ -45,7 +45,7 @@ def submit_login_credit():
             boss_user = Boss.query.filter_by(boss_id=input_id).first()
             if input_password == boss_user.boss_password:
                 flash("Login Successful", "success")
-                return render_template("bosslogin.html", title = "Boss Login", login_name = boss_user.boss_name)
+                return render_template("bosslogin.html", title = "Boss Login", login_name = boss_user.boss_name, login_site_id = None)
         except Exception as e:
             pass
         
@@ -53,7 +53,7 @@ def submit_login_credit():
             site_eng_user = SiteEngineerDetails.query.filter_by(site_eng_id=input_id).first()  
             if input_password == site_eng_user.site_eng_password:
                 flash("Login Successful", "success")
-                return render_template("siteengineerlogin.html", title = "Site Engineer Login", login_name = site_eng_user.site_eng_name)
+                return render_template("siteengineerlogin.html", title = "Site Engineer Login", login_name = site_eng_user.site_eng_name, login_site_id = site_eng_user.site_id)
         except Exception as e:
             
             pass
@@ -63,7 +63,7 @@ def submit_login_credit():
             supervisor_user = SupervisorDetails.query.filter_by(supervisor_id=input_id).first()
             if input_password == supervisor_user.supervisor_password:
                 flash("Login Successful", "success")
-                return render_template("supervisorlogin.html", title = "Supervisor Login", login_name = supervisor_user.supervisor_name)
+                return render_template("supervisorlogin.html", title = "Supervisor Login", login_name = supervisor_user.supervisor_name, login_site_id =supervisor_user.site_id)
             
         except Exception as e:
             pass
@@ -74,15 +74,15 @@ def submit_login_credit():
         '''
         if input_id == "Boss01" and input_password == "123qwe":
             flash("Login Successful", "success")
-            return render_template("bosslogin.html", title = "Boss Login", login_name = "Sample Boss")
+            return render_template("bosslogin.html", title = "Boss Login", login_name = "Sample Boss", login_site_id = None)
         
         elif input_id == "Super01" and input_password == "123qwe":
             flash("Login Successful", "success")
-            return render_template("supervisorlogin.html", title = "Supervisor Login", login_name = "Sample Supervisor")
+            return render_template("supervisorlogin.html", title = "Supervisor Login", login_name = "Sample Supervisor", login_site_id = None)
         
         elif input_id == "Site01" and input_password == "123qwe":
             flash("Login Successful", "success")
-            return render_template("siteengineerlogin.html", title = "Site Engineer Login", login_name = "Sample Site Engineer")
+            return render_template("siteengineerlogin.html", title = "Site Engineer Login", login_name = "Sample Site Engineer", login_site_id = None)
         
         else:
             print(input_id, input_password)
@@ -406,11 +406,11 @@ def search_supervisor():
                                                                                            
     if option_supervisor == "supervisor_name":
         selected_supervisor = SupervisorDetails.query.filter_by(supervisor_name = search_attribute_supervisor).first()             
-        attribute_site_engineer = "Name"                    # This is used to tell which attribute is used to search the supervisor     
+        attribute_supervisor = "Name"                    # This is used to tell which attribute is used to search the supervisor     
     
     if option_supervisor == "site_id":
         selected_supervisor = SupervisorDetails.query.filter_by(site_id = search_attribute_supervisor).first()                  
-        attribute_site_engineer = "Site ID"                    # This is used to tell which attribute is used to search the supervisor
+        attribute_supervisor = "Site ID"                    # This is used to tell which attribute is used to search the supervisor
     
     # Add searching query                                                               
     return render_template("update_supervisor.html", title="Update Supervisor", selected_supervisor=selected_supervisor, option_supervisor=option_supervisor,
@@ -458,17 +458,71 @@ def submit_change_supervisor(id):
     
 
 
+###################################### Add/Update Location ##########################################################
+# This is a decorator to add a new location. Its function call is present in bosslogin.html. 
+@app.route("/add_location", methods=["POST"])
+def add_location():                                                           # Return the webpage where we can add a new location 
+    return render_template("add_location.html", title="Add Location") 
 
-# This is a decorator to add a new location or project or site. Its function call is present in bosslogin.html. 
-@app.route("/add_location_project_site", methods=["POST"])
-def add_location_project_site():                                                           # Return the webpage where we can add a new location or project or site
-    return render_template("add_location_project_site.html", title="Add Location/Project/Site") 
+
+@app.route("/submit_new_location", methods = ["POST"])
+def submit_new_location():
+    location_id = request.form["location_id"]
+    location_name = request.form["location_name"]
+    location_state = request.form["location_state"]
+    location_project_number = request.form["location_project_number"]
+    
+    try:
+        location_data = LocationData(location_id=location_id,location_name=location_name,
+                                     location_state=location_state,
+                                     location_project_number=location_project_number)
+        
+        db.session.add(location_data)
+        db.session.commit()
+        
+    except Exception as e:
+        flash(f"Got an error: {e}", "warning")
+        return render_template("add_location.html", title="Add Location")
+    
+    return render_template("add_location.html", title="Add Location")
+
+# This is a decorator to change the data of location. Its function call is present in bosslogin.html. 
+@app.route("/change_location", methods=["POST"])
+def change_location():                                                        # Return the webpage where we can change the data of location 
+    return render_template("change_location.html", title="Change Location") 
 
 
-# This is a decorator to change the data of location or project or site. Its function call is present in bosslogin.html. 
-@app.route("/change_location_project_site", methods=["POST"])
-def change_location_project_site():                                                        # Return the webpage where we can change the data of location or project or site
-    return render_template("change_location_project_site.html", title="Change Location/Project/Site") 
+@app.route("/search_location", methods=["POST"])
+def search_location():
+    option_location = "location_id"
+    search_attribute_location = request.form["search_attribute_location"]
+    
+    selected_location = LocationData.query.filter_by(location_id = search_attribute_location).first()
+    
+    return render_template("update_location.html", title = "Update Location", option_location=option_location,search_attribute_location=search_attribute_location,
+                           selected_location=selected_location)
+    
+@app.route("/update_location", methods=["POST"])
+def update_location():
+    return render_template("update_location.html", title="Update Location")
+
+
+@app.route("/submit_change_location/<string:id>", methods=["GET", "POST"])
+def submit_change_location(id):
+    location = LocationData.query.filter_by(location_id=id).first()
+    
+    if request.form["location_id"]:
+        location.location_id = request.form['location_id']
+    if request.form["location_name"]:
+        location.location_name = request.form['location_name']
+    if request.form["location_state"]:
+        location.location_state = request.form['location_state']
+    if request.form["location_project_number"]:
+        location.location_project_number = request.form['location_project_number']
+    db.session.commit()
+    
+    return render_template("/change_location.html", title="Change Location")
+
 
 
 # This is a decorator to check the attendance. Its function call is present in bosslogin.html. 
@@ -501,19 +555,22 @@ def supervisorlogin():
 
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Attendance system @@@@@@@@@@@@@@@@@@@@@@@@@@@
-@app.route("/take_morning_attendance", methods = ["POST"])
-def take_morning_attendance():
-    worker_attendance = WorkerDetail.query.all()
+@app.route("/take_morning_attendance/<string:id>", methods = ["POST"])
+def take_morning_attendance(id):
+    if id != None:
+        worker_attendance = WorkerDetail.query.filter_by(site_id=id).all()
+    else:
+        worker_attendance = WorkerDetail.query.all()
     site_name = SiteData.query.filter_by(site_id = worker_attendance[0].site_id).first()
     site_name = site_name.site_name
     date_time = datetime.now()
     attendance_date = date_time.strftime("%d/%m/%Y")
-    return render_template("take_morning_attendance.html", title ="Take Attendance", worker_attendance=worker_attendance, site_name = site_name, attendance_date = attendance_date)
+    return render_template("take_morning_attendance.html", title ="Take Attendance", worker_attendance=worker_attendance, site_name = site_name, attendance_date = attendance_date, login_site_id=id)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~` Sample`
-@app.route("/submit_morning_attendance", methods = ["POST"])
-def submit_morning_attendace():
+@app.route("/submit_morning_attendance/<string:id>", methods = ["POST"])
+def submit_morning_attendace(id):
      # If time is between 10 PM to 4 AM, delete the database
     current_time = datetime.now().hour
     # if current_time in [22, 23, 0, 1, 2, 3, 4]:
@@ -521,7 +578,11 @@ def submit_morning_attendace():
     db.session.commit()
     
     present_workers = request.form.getlist("present")
-    all_workers = WorkerPrimary.query.all()
+    if id != None:
+        all_workers = WorkerDetail.query.filter_by(site_id=id).all()
+    else:
+        all_workers = WorkerDetail.query.all()
+    
     absent_workers = [x.worker_id for x in all_workers if x.worker_id not in present_workers]
     
     # MArk present
@@ -548,19 +609,22 @@ def submit_morning_attendace():
 
 
 # For evening attendance
-@app.route("/take_evening_attendance", methods = ["POST"])
-def take_evening_attendance():
-    worker_attendance = WorkerDetail.query.all()
+@app.route("/take_evening_attendance/<string:id>", methods = ["POST"])
+def take_evening_attendance(id):
+    if id != None:
+        worker_attendance = WorkerDetail.query.filter_by(site_id=id).all()
+    else:
+        worker_attendance = WorkerDetail.query.all()
     site_name = SiteData.query.filter_by(site_id = worker_attendance[0].site_id).first()
     site_name = site_name.site_name
     date_time = datetime.now()
     attendance_date = date_time.strftime("%d/%m/%Y")
-    return render_template("take_evening_attendance.html", title ="Take Attendance", worker_attendance=worker_attendance, site_name = site_name, attendance_date = attendance_date)
+    return render_template("take_evening_attendance.html", title ="Take Attendance", worker_attendance=worker_attendance, site_name = site_name, attendance_date = attendance_date, login_site_id=id)
 
 
 ################## Work on this
-@app.route("/submit_evening_attendance", methods = ["POST"])
-def submit_evening_attendace():
+@app.route("/submit_evening_attendance/<string:id>", methods = ["POST"])
+def submit_evening_attendace(id):
     
     # If time is between 10 PM to 4 AM, delete the database
     current_time = datetime.now().hour
@@ -570,7 +634,14 @@ def submit_evening_attendace():
     
     present_workers = request.form.getlist("present")
     overtime_hour_work = request.form.getlist("overtime_hour")
-    all_workers = WorkerPrimary.query.all()
+    
+    
+    if id != None:
+        all_workers = WorkerDetail.query.filter_by(site_id=id).all()
+    else:
+        all_workers = WorkerDetail.query.all()
+    
+    
     absent_workers = [x.worker_id for x in all_workers if x.worker_id not in present_workers]
     all_workers_id = [x.worker_id for x in all_workers]
     worker_dict = dict(zip(all_workers_id, overtime_hour_work))
@@ -615,10 +686,10 @@ def finalize_attendance(id):
     
 
 # Submit the whole day attendance
-@app.route("/add_full_day_attendance", methods = ["POST"])
-def add_full_day_attendance():
-    morning_attendance = WorkerTodayMorningAttendance.query.order_by(WorkerTodayMorningAttendance.worker_id).all()
-    evening_attendance = WorkerTodayEveningAttendance.query.order_by(WorkerTodayEveningAttendance.worker_id).all()
+@app.route("/add_full_day_attendance/<string:id>", methods = ["POST"])
+def add_full_day_attendance(id):
+    morning_attendance = WorkerTodayMorningAttendance.query.filter_by(site_id=id).order_by(WorkerTodayMorningAttendance.worker_id).all()
+    evening_attendance = WorkerTodayEveningAttendance.query.filter_by(site_id=id).order_by(WorkerTodayEveningAttendance.worker_id).all()
     
     for i in evening_attendance:
         attendance = WorkerAttendance(row_id = random.randint(1, 1000),

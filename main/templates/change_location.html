@@ -1,0 +1,23 @@
+<!-- Search the worker and select the particular worker to change -->
+
+{% extends "layout.html" %}
+{% block content %}
+<p>Change Worker</p><br>
+<form method="POST" action="/search_location">
+
+        <label for="option_location">Search a Location by ID: </label>
+    <br><br>
+    <label for="search_attribute_location">Enter the above selected attribute: </label>
+    <input type="text" name="search_attribute_location" id="search_attribute_location"><br><br>
+    <br>
+
+    <input type="submit" value="Submit">
+
+</form>
+
+
+<br><br>
+<button onclick="goBack()">Go Back</button>
+<br><br>
+
+{% endblock content %}

@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- Heading of the webpage -->
+<a href="#" class="button button-grad" size="50px">Add Location</a>
+<br><br><br>
+
+<!-- Start of HTML form to get data of new location -->
+<form method="POST" action ="/submit_new_location">
+
+    <!-- Get ID of the Location -->
+    <label for="location_id">Location ID: </label>
+    <input type="text" name="location_id" id="location_id"><br><br>
+
+    <!-- Get name of the Location -->
+    <label for="location_name">Name: </label>
+    <input type="text" name="location_name" id="location_name"><br><br>
+    
+    <!-- Get state of the location -->
+    <label for="location_state">State: </label>
+    <input type="text" name="location_state" id="location_state"><br><br>
+
+    <!-- Get total projects under given location -->
+    <label for="location_project_number">Total Projects Running: </label>
+    <input type="text" name="location_project_number" id="location_project_number"><br><br>
+    
+
+    <!-- Submit the data -->
+    <input type="submit" value="Submit">
+</form>
+<!-- End of the form -->
+
+<br><br>
+
+<br><br>
+<button onclick="goBack()">Go Back</button>
+<br><br>
+{% endblock content %}
