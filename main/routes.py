@@ -605,11 +605,80 @@ def submit_change_project(id):
     return render_template("/change_project.html", title="Change Project")
 
 
+############################################## Add/Update Site #########################################
+
+
+# This is a decorator to add a new site. Its function call is present in bosslogin.html. 
+@app.route("/add_site", methods=["POST"])
+def add_site():                                                           # Return the webpage where we can add a new location 
+    return render_template("add_site.html", title="Add Site") 
+
+
+@app.route("/submit_new_site", methods = ["POST"])
+def submit_new_site():
+    site_id = request.form["site_id"]
+    site_name = request.form["site_name"]
+    location_id = request.form["location_id"]
+    site_pincode = request.form["site_pincode"]
+    site_project_number = request.form["site_project_number"]
+    
+    try:
+        site_data = SiteData(site_id=site_id,site_name=site_name,location_id=location_id,
+                             site_pincode=site_pincode,site_project_number=site_project_number)
+        
+        db.session.add(site_data)
+        db.session.commit()
+        
+    except Exception as e:
+        flash(f"Got an error: {e}", "warning")
+        return render_template("add_site.html", title="Add Site")
+    
+    return render_template("add_site.html", title="Add Site")
+
+# This is a decorator to change the data of site. Its function call is present in bosslogin.html. 
+@app.route("/change_site", methods=["POST"])
+def change_site():                                                        # Return the webpage where we can change the data of location 
+    return render_template("change_site.html", title="Change Site") 
+
+
+@app.route("/search_site", methods=["POST"])
+def search_site():
+    option_site = "site_id"
+    search_attribute_site = request.form["search_attribute_site"]
+    
+    selected_site = SiteData.query.filter_by(site_id = search_attribute_site).first()
+    
+    return render_template("update_site.html", title = "Update Site", option_site=option_site,search_attribute_site=search_attribute_site,
+                           selected_site=selected_site)
+    
+@app.route("/update_site", methods=["POST"])
+def update_site():
+    return render_template("update_site.html", title="Update Site")
+
+
+@app.route("/submit_change_site/<string:id>", methods=["GET", "POST"])
+def submit_change_site(id):
+    site = SiteData.query.filter_by(site_id=id).first()
+    
+    if request.form["site_id"]:
+        site.site_id = request.form['site_id']
+    if request.form["site_name"]:
+        site.site_name = request.form['site_name']
+    if request.form["location_id"]:
+        site.location_id = request.form['location_id']
+    if request.form["site_pincode"]:
+        site.site_project = request.form['site_project']
+    if request.form["site_project_number"]:
+        site.site_project_number = request.form['site_project_number']
+    db.session.commit()
+    
+    return render_template("/change_site.html", title="Change Site")
 
 
 
 
 
+######################################### Attendance System #################
 # This is a decorator to check the attendance. Its function call is present in bosslogin.html. 
 @app.route("/check_attendance", methods=["POST"])
 def check_attendance():                                                                    # Return the webpage where we can check the attndance

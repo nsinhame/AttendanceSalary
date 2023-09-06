@@ -1,0 +1,22 @@
+<!-- Search the site and select the particular site to change -->
+
+{% extends "layout.html" %}
+{% block content %}
+<p>Change Site</p><br>
+<form method="POST" action="/search_site">
+        <label for="option_site">Search a Site by ID: </label>
+    <br><br>
+    <label for="search_attribute_site">Enter the above selected attribute: </label>
+    <input type="text" name="search_attribute_site" id="search_attribute_site"><br><br>
+    <br>
+
+    <input type="submit" value="Submit">
+
+</form>
+
+
+<br><br>
+<button onclick="goBack()">Go Back</button>
+<br><br>
+
+{% endblock content %}

@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+<!-- Heading of the webpage -->
+<a href="#" class="button button-grad" size="50px">Add Site</a>
+<br><br><br>
+
+<!-- Start of HTML form to get data of new site -->
+<form method="POST" action ="/submit_new_site">
+
+    <!-- Get ID of the Site -->
+    <label for="site_id">Site ID: </label>
+    <input type="text" name="site_id" id="site_id"><br><br>
+
+    <!-- Get name of the Site -->
+    <label for="site_name">Name: </label>
+    <input type="text" name="site_name" id="site_name"><br><br>
+    
+    <!-- Get ID of the Location -->
+    <label for="location_id">Location ID: </label>
+    <input type="text" name="location_id" id="location_id"><br><br>
+
+    <!-- Get pincode of the Site -->
+    <label for="site_pincode">Pincode: </label>
+    <input type="text" name="site_pincode" id="site_pincode"><br><br>
+    
+    <!-- Total Projects on that Site -->
+    <label for="site_project_number">Total Projects: </label>
+    <input type="text" name="site_project_number" id="site_project_number"><br><br>
+    
+    
+    <!-- Submit the data -->
+    <input type="submit" value="Submit">
+</form>
+<!-- End of the form -->
+
+<br><br>
+
+<br><br>
+<button onclick="goBack()">Go Back</button>
+<br><br>
+{% endblock content %}
