@@ -53,7 +53,7 @@ def submit_login_credit():
             site_eng_user = SiteEngineerDetails.query.filter_by(site_eng_id=input_id).first()  
             if input_password == site_eng_user.site_eng_password:
                 flash("Login Successful", "success")
-                return render_template("siteengineerlogin.html", title = "Site Engineer Login", login_name = site_eng_user.site_eng_name, login_site_id = site_eng_user.site_id)
+                return render_template("siteengineerlogin.html", title = "Site Engineer Login", login_name = site_eng_user.site_eng_name, login_site_id = site_eng_user.project_id)
         except Exception as e:
             
             pass
@@ -63,7 +63,7 @@ def submit_login_credit():
             supervisor_user = SupervisorDetails.query.filter_by(supervisor_id=input_id).first()
             if input_password == supervisor_user.supervisor_password:
                 flash("Login Successful", "success")
-                return render_template("supervisorlogin.html", title = "Supervisor Login", login_name = supervisor_user.supervisor_name, login_site_id =supervisor_user.site_id)
+                return render_template("supervisorlogin.html", title = "Supervisor Login", login_name = supervisor_user.supervisor_name, login_site_id =supervisor_user.project_id)
             
         except Exception as e:
             pass
@@ -748,19 +748,14 @@ def submit_change_site(id):
 
 
 
-
-
-######################################### Attendance System #################
-# This is a decorator to check the attendance. Its function call is present in bosslogin.html. 
-@app.route("/check_attendance", methods=["POST"])
-def check_attendance():                                                                    # Return the webpage where we can check the attndance
-    return render_template("check_attendance.html", title="Check Attendance") 
-
+################################################### Salary System #########################
 
 # This is a decorator to check the salary. Its function call is present in bosslogin.html. 
 @app.route("/check_salary", methods=["POST"])
 def check_salary():                                                                        # Return the webpage where we can check the salary
     return render_template("check_salary.html", title="Check Salary") 
+
+
 
 
 ################################################## Funtions on siteengineerlogin.html and supervisorlogin.html ##############################
@@ -779,16 +774,31 @@ def supervisorlogin():
 
 
 
+#########################################                     Attendance System                      #################
+# This is a decorator to check the attendance. Its function call is present in bosslogin.html. 
+@app.route("/check_attendance", methods=["POST"])
+def check_attendance():                                                                    # Return the webpage where we can check the attndance
+    return render_template("check_attendance.html", title="Check Attendance") 
+
+
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Attendance system @@@@@@@@@@@@@@@@@@@@@@@@@@@
 @app.route("/take_morning_attendance/<string:id>", methods = ["POST"])
 def take_morning_attendance(id):
+    
     if id != None:
-        worker_attendance = WorkerDetail.query.filter_by(site_id=id).all()
+        worker_attendance = WorkerDetail.query.filter_by(project_id=id).all()
+        project_id = worker_attendance[0].project_id
     else:
         worker_attendance = WorkerDetail.query.all()
-    site_name = SiteData.query.filter_by(site_id = worker_attendance[0].site_id).first()
-    site_name = site_name.site_name
+    
+    try:
+        site_name = ProjectData.query.filter_by(project_id = project_id).first()
+        site_name = site_name.project_name
+    except Exception as e:
+        site_name = "All"
+    
+    
     date_time = datetime.now()
     attendance_date = date_time.strftime("%d/%m/%Y")
     return render_template("take_morning_attendance.html", title ="Take Attendance", worker_attendance=worker_attendance, site_name = site_name, attendance_date = attendance_date, login_site_id=id)
@@ -805,7 +815,7 @@ def submit_morning_attendace(id):
     
     present_workers = request.form.getlist("present")
     if id != None:
-        all_workers = WorkerDetail.query.filter_by(site_id=id).all()
+        all_workers = WorkerDetail.query.filter_by(project_id=id).all()
     else:
         all_workers = WorkerDetail.query.all()
     
@@ -838,11 +848,16 @@ def submit_morning_attendace(id):
 @app.route("/take_evening_attendance/<string:id>", methods = ["POST"])
 def take_evening_attendance(id):
     if id != None:
-        worker_attendance = WorkerDetail.query.filter_by(site_id=id).all()
+        worker_attendance = WorkerDetail.query.filter_by(project_id=id).all()
+        project_id = worker_attendance[0].project_id
     else:
         worker_attendance = WorkerDetail.query.all()
-    site_name = SiteData.query.filter_by(site_id = worker_attendance[0].site_id).first()
-    site_name = site_name.site_name
+    
+    try:
+        site_name = ProjectData.query.filter_by(project_id = project_id).first()
+        site_name = site_name.project_name
+    except:
+        site_name = "All"
     date_time = datetime.now()
     attendance_date = date_time.strftime("%d/%m/%Y")
     return render_template("take_evening_attendance.html", title ="Take Attendance", worker_attendance=worker_attendance, site_name = site_name, attendance_date = attendance_date, login_site_id=id)
@@ -863,7 +878,7 @@ def submit_evening_attendace(id):
     
     
     if id != None:
-        all_workers = WorkerDetail.query.filter_by(site_id=id).all()
+        all_workers = WorkerDetail.query.filter_by(project_id=id).all()
     else:
         all_workers = WorkerDetail.query.all()
     
@@ -914,26 +929,31 @@ def finalize_attendance(id):
 # Submit the whole day attendance
 @app.route("/add_full_day_attendance/<string:id>", methods = ["POST"])
 def add_full_day_attendance(id):
-    morning_attendance = WorkerTodayMorningAttendance.query.filter_by(site_id=id).order_by(WorkerTodayMorningAttendance.worker_id).all()
-    evening_attendance = WorkerTodayEveningAttendance.query.filter_by(site_id=id).order_by(WorkerTodayEveningAttendance.worker_id).all()
+    if id != None:
+        worker_attendance = WorkerDetail.query.filter_by(project_id=id).all()
+        project_id = worker_attendance[0].project_id
+        worker_ids = [i.worker_id for i in worker_attendance]
+    else:
+        worker_attendance = WorkerDetail.query.all()
+        project_id = worker_attendance[0].project_id
+        worker_ids = [i.worker_id for i in worker_attendance]
+        
+    
+    morning_attendance = WorkerTodayMorningAttendance.query.filter(WorkerTodayMorningAttendance.worker_id.in_(worker_ids)).order_by(WorkerTodayMorningAttendance.worker_id).all()
+    evening_attendance = WorkerTodayEveningAttendance.query.filter(WorkerTodayEveningAttendance.worker_id.in_(worker_ids)).order_by(WorkerTodayEveningAttendance.worker_id).all()
     
     for i in evening_attendance:
         attendance = WorkerAttendance(row_id = random.randint(1, 1000),
                                       worker_id = i.worker_id,
                                       attendance_date = i.attendance_date,
                                       attendance_month = str(calendar.month_name[date.today().month]),
-                                      attendance_year = "2023",
+                                      attendance_year = str(datetime.now().year),
                                       overtime_hours = i.overtime_today,
                                       attendance_status = finalize_attendance(i.worker_id))
         
         db.session.add(attendance)
         db.session.commit()
     return render_template("siteengineerlogin.html", title = "Site Engineer Login") 
-
-
-
-
-
 
 
 

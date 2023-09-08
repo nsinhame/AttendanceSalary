@@ -13,7 +13,7 @@
 <h2> Site: {{ worker_attendance[0].site_id }}</h2>
 <h2> Date: {{ attendance_date }}</h2>
 <br>
-<form method="POST" action="/submit_evening_attendance{{ login_site_id }}">
+<form method="POST" action="/submit_evening_attendance/{{ login_site_id }}">
     <table border="2">
         <tr>
             <th> Worker ID </th>
@@ -37,6 +37,7 @@
         </tr>
         {% endfor %}
     
+
 
     </table>
         <br><br>
