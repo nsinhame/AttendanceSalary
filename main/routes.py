@@ -187,12 +187,8 @@ def update_site_engineer():
 def submit_change_site_engineer(id):
     try:
         site_engineer = SiteEngineerDetails.query.filter_by(site_eng_id=id).first()
-    except:
-        try:
-            site_engineer = SiteEngineerDetails.query.filter_by(site_eng_name=id).first()
-        except:
-            site_engineer = SiteEngineerDetails.query.filter_by(site_id=id).first()
-    
+    except Exception as e:
+        flash(f"Gon an error: {e}", "warning")
     
     '''Update the given site engineer with the new given data'''
     if request.form["site_eng_id"]:
@@ -241,9 +237,15 @@ def submit_new_worker():
     worker_join_date = datetime.strptime(request.form['worker_join_date'], '%Y-%m-%d')
     worker_salary = request.form["worker_salary"]
     supervisor_id = request.form["supervisor_id"]
-    site_id = request.form["site_id"]
+    project_id = request.form["project_id"]
     still_working = request.form["still_working"]
-    
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(request.form['worker_join_date'], type(request.form['worker_join_date']))
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     try:
         worker_data = WorkerDetail(worker_id=worker_id, worker_name=worker_name,
                                    worker_phone_number=worker_phone_number,
@@ -253,7 +255,7 @@ def submit_new_worker():
                                    worker_ifsc_code=worker_ifsc_code, worker_bank_name=worker_bank_name,
                                    worker_bank_branch_name=worker_bank_branch_name, worker_join_date=worker_join_date,
                                    worker_salary=worker_salary, supervisor_id=supervisor_id,
-                                   site_id=site_id, still_working=still_working)
+                                   project_id=project_id, still_working=still_working)
         
         db.session.add(worker_data)
         db.session.commit()
@@ -283,8 +285,8 @@ def search_worker():
         selected_worker = WorkerDetail.query.filter_by(worker_name = search_attribute_worker).first()             
         attribute_worker = "Name"                    # This is used to tell which attribute is used to search the worker
     
-    if option_worker == "site_id":
-        selected_worker = SiteEngineerDetails.query.filter_by(site_id = search_attribute_worker).first()                  
+    if option_worker == "project_id":
+        selected_worker = WorkerDetail.query.filter_by(project_id = search_attribute_worker).first()                  
         attribute_worker = "Site ID"                    # This is used to tell which attribute is used to search the worker
     
     # Add searching query                                                               
@@ -335,8 +337,8 @@ def submit_change_worker(id):
         worker.worker_salary = request.form["worker_salary"]
     if request.form["supervisor_id"]:
         worker.supervisor_id = request.form["supervisor_id"]
-    if request.form["site_id"]:
-        worker.site_id = request.form["site_id"]
+    if request.form["project_id"]:
+        worker.project_id = request.form["project_id"]
     if request.form["still_working"]:
         worker.still_working = request.form["still_working"]
     
@@ -737,7 +739,7 @@ def submit_change_site(id):
     if request.form["location_id"]:
         site.location_id = request.form['location_id']
     if request.form["site_pincode"]:
-        site.site_project = request.form['site_project']
+        site.site_project = request.form['site_pincode']
     if request.form["site_project_number"]:
         site.site_project_number = request.form['site_project_number']
     db.session.commit()

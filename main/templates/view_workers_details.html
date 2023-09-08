@@ -32,7 +32,7 @@
         <th>Joining Date</th>
         <th>Per Day Salary</th>
         <th>Supervisor ID</th>
-        <th>Site ID</th>
+        <th>Project ID</th>
         <th>Still Working</th>
     </tr>
     {% for i in worker_detail %}
@@ -47,10 +47,10 @@
         <td>{{ i.worker_ifsc_code }}</td>
         <td>{{ i.worker_bank_name }}</td>
         <td>{{ i.worker_bank_branch_name }}</td>
-        <td>{{ i.worker_join_date }}</td>
+        <td>{{ i.worker_join_date.strftime("%d/%m/%Y") }}</td>
         <td>{{ i.worker_salary }}</td>
         <td>{{ i.supervisor_id }}</td>
-        <td>{{ i.site_id }}</td>
+        <td>{{ i.project_id }}</td>
         <td>{{ i.still_working }}</td>
     </tr>
     {% endfor %}
